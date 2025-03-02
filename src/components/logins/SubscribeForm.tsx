@@ -28,8 +28,8 @@ export default function Subscribe() {
         },
         body: JSON.stringify({
           access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
-          subject: "Subscription to HI-Bukhari Islamic Art Digital Gallery.",
-          name: "Visitor of HI-Bukhari Islamic Art Digital Gallery.",
+          subject: "Di RAMADHAN.VOYAGE.CO.ID ada subscriber baru.",
+          name: "Pengunjung RAMADHAN.VOYAGE.CO.ID",
           email,
           message:
             "Assalamualaikum! I want to subscribe to your latest updates.",
@@ -52,20 +52,20 @@ export default function Subscribe() {
   }
 
   return (
-    <div className="w-full flex flex-col justify-center sm:justify-start items-center sm:items-start">
-      <h3 className="text-center sm:text-left text-sm md:text-base font-semibold text-back-ground">
+    <>
+      <h3 className="sm:text-left text-center text-sm md:text-base font-semibold text-back-ground">
         Catch our latest updates
       </h3>
 
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="w-full flex flex-row justify-center sm:justify-start mt-2">
+        <div className="w-full flex flex-row sm:justify-start justify-center mt-2">
           <input
             type="email"
             name="email"
             placeholder="Enter your email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="text-xs md:text-sm w-2/3 lg:w-3/5 px-2 py-0 border border-border-tombol rounded-l-lg bg-transparent focus:outline-hidden placeholder-icon-wording text-border-tombol"
+            className="text-xs md:text-sm w-2/3 lg:w-3/5 px-2 py-0 border border-border-tombol rounded-l-lg bg-transparent focus:outline-hidden placeholder-border-tombol text-back-ground"
             disabled={loading}
           />
           <button
@@ -79,10 +79,10 @@ export default function Subscribe() {
 
       {/* Success/Error Message */}
       {statusMessage && (
-        <h4 className="text-left text-sm font-medium text-icon-wording mt-2">
+        <h4 className="text-center sm:text-left text-sm font-medium text-border-tombol mt-2">
           {statusMessage}
         </h4>
       )}
-    </div>
+    </>
   );
 }

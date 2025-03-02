@@ -16,7 +16,7 @@ import {
 
 // Blockchain configurations
 import { client } from "@/config/client";
-import { bukhariOpenDoor } from "@/config/contracts";
+import { memoraZer0 } from "@/config/contracts";
 import { base } from "@/config/rantais";
 
 const SouvenirDetails: React.FC = () => {
@@ -37,13 +37,13 @@ const SouvenirDetails: React.FC = () => {
 
   // Fetch NFT metadata
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
-    contract: bukhariOpenDoor,
+    contract: memoraZer0,
     tokenId: tokenIdBigInt,
   });
 
   // Fetch user's owned NFTs
   const { data: ownedNfts } = useReadContract(balanceOf, {
-    contract: bukhariOpenDoor,
+    contract: memoraZer0,
     owner: smartAccount?.address ?? "",
     tokenId: tokenIdBigInt,
     queryOptions: { enabled: !!smartAccount?.address && !!tokenId },
@@ -118,6 +118,7 @@ const SouvenirDetails: React.FC = () => {
             {nft?.metadata.name || "Souvenir Details"}
           </h1>
 
+          {/* Provider or Creator */}
           <div className="flex flex-row gap-2">
             <h1 className="text-left text-sm font-medium text-icon-wording">
               by
@@ -188,9 +189,9 @@ const SouvenirDetails: React.FC = () => {
                   : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body"
               }
             `}
-            contractAddress={bukhariOpenDoor.address}
+            contractAddress={memoraZer0.address}
             payModal={payModalConfig}
-            chain={bukhariOpenDoor.chain}
+            chain={memoraZer0.chain}
             client={client}
             claimParams={{
               type: "ERC1155",

@@ -12,12 +12,13 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Bukhari Islamic Art Gallery - Harmoni Istiqlal",
-  description: "Galeri Seni Islam Bukhari",
-  metadataBase: new URL("https://nota.straight-line.org"),
+  title: "Sambut Ramadhan Dengan Kejutan Spesial!",
+  description:
+    "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
+  metadataBase: new URL("https://ramadhan.voyage.co.id"),
   authors: [
     { name: "MyReceipt", url: "https://www.straight-line.org" },
-    { name: "Prof. NOTA", url: "https://prompt.straight-line.org" },
+    { name: "Prof. NOTA", url: "https://nota.straight-line.org" },
   ],
   creator: "MyReceipt and Friends",
   publisher: "Voyage.co.id",
@@ -25,17 +26,18 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Bukhari Islamic Art Gallery - Harmoni Istiqlal",
-    description: "Galeri Seni Islam Bukhari",
-    url: "https://galeri.harmoniistiqlal.com",
-    siteName: "Bukhari Islamic Art Gallery - Harmoni Istiqlal",
+    title: "Sambut Ramadhan Dengan Kejutan Spesial!",
+    description:
+      "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
+    url: "https://ramadhan.voyage.co.id",
+    siteName: "Sambut Ramadhan Dengan Kejutan Spesial!",
     locale: "en-US",
     images: [
       {
-        url: "https://galeri.harmoniistiqlal.com/screenshot-galeri-harmoni-bukhari-istiqlal.png",
+        url: "https://ramadhan.voyage.co.id/sambut-ramadhan-di-masjid-istiqlal.png",
         width: 1920,
         height: 1080,
-        alt: "Galeri Seni Islam Bukhari",
+        alt: "Sambut Ramadhan Di Masjid Istiqlal",
       },
     ],
     type: "website",
@@ -45,10 +47,11 @@ export const metadata: Metadata = {
     siteId: "@MyReceiptTT",
     creator: "@MyReceiptTT",
     creatorId: "@MyReceiptTT",
-    title: "Bukhari Islamic Art Gallery - Harmoni Istiqlal",
-    description: "Galeri Seni Islam Bukhari",
+    title: "Sambut Ramadhan Dengan Kejutan Spesial!",
+    description:
+      "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
     images: [
-      "https://galeri.harmoniistiqlal.com/screenshot-galeri-harmoni-bukhari-istiqlal.png",
+      "https://ramadhan.voyage.co.id/sambut-ramadhan-di-masjid-istiqlal.png",
     ],
   },
 };

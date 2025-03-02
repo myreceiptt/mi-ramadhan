@@ -7,10 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import {
-  FaDiscord,
-  FaXTwitter,
+  FaLinkedin,
+  FaWhatsapp,
   FaInstagram,
-  FaFacebookF,
+  FaEnvelope,
   FaYoutube,
 } from "react-icons/fa6";
 
@@ -19,63 +19,48 @@ import Subscribe from "./SubscribeForm";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-hitam-judul-body py-4 px-4 md:px-20">
-      <div className="grid grid-cols-1 lg:grid-cols-2 justify-items-center gap-4">
-        <div className="w-full flex flex-col justify-items-center gap-4">
+    <footer className="w-full bg-footer-coklat py-4 px-4 md:px-20">
+      <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
+        <div className="w-full flex flex-col">
           {/* Newsletter Signup */}
           <Subscribe />
         </div>
-        <div className="w-full flex flex-col sm:flex-row justify-between gap-4">
+        <div className="w-full flex flex-col">
           {/* Social Media Links */}
-          <div className="w-full sm:w-2/3">
-            <h3 className="text-center sm:text-left text-xs md:text-sm font-semibold text-back-ground">
-              Join the Community
-            </h3>
-            <div className="flex gap-2 mt-2 justify-center sm:justify-start">
-              <Link
-                href="#"
-                className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-back-box-icon m-1 rounded-lg">
-                <FaDiscord />
-              </Link>
-              <Link
-                href="#"
-                className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-back-box-icon m-1 rounded-lg">
-                <FaXTwitter />
-              </Link>
-              <Link
-                href="#"
-                className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-back-box-icon m-1 rounded-lg">
-                <FaInstagram />
-              </Link>
-              <Link
-                href="#"
-                className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-back-box-icon m-1 rounded-lg">
-                <FaFacebookF />
-              </Link>
-              <Link
-                href="#"
-                className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-back-box-icon m-1 rounded-lg">
-                <FaYoutube />
-              </Link>
-            </div>
-          </div>
-
-          {/* Navigation Links */}
-          <div className="w-full sm:w-1/3">
-            <h3 className="text-center sm:text-left text-xs md:text-sm font-semibold text-icon-wording">
-              Claim Pages
-            </h3>
-            <ul className="text-center sm:text-left text-xs sm:text-sm md:text-base text-back-ground mt-2">
-              <li>
-                <Link href="/free">Free Claim</Link>
-              </li>
-              <li>
-                <Link href="#">Paid Claim</Link>
-              </li>
-              <li>
-                <Link href="/redeem">Coins Reward</Link>
-              </li>
-            </ul>
+          <h3 className="sm:text-end text-center text-sm md:text-base font-semibold text-back-ground">
+            Join the Community
+          </h3>
+          <div className="flex gap-2 mt-2 sm:justify-end justify-center">
+            <Link
+              href="https://www.linkedin.com/company/voyage-web3/about/"
+              target="_blank"
+              className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-footer-kotak-icon m-1 rounded-lg">
+              <FaLinkedin />
+            </Link>
+            <Link
+              href="https://www.instagram.com/voyage.web3/"
+              target="_blank"
+              className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-footer-kotak-icon m-1 rounded-lg">
+              <FaInstagram />
+            </Link>
+            <Link
+              href="https://www.youtube.com/@voyageweb3"
+              target="_blank"
+              className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-footer-kotak-icon m-1 rounded-lg">
+              <FaYoutube />
+            </Link>
+            <Link
+              href="mailto:hello@voyage.co.id"
+              target="_blank"
+              className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-footer-kotak-icon m-1 rounded-lg">
+              <FaEnvelope />
+            </Link>
+            <Link
+              href="https://api.whatsapp.com/send?phone=6281808038000&text=Hello%2C%20Voyagers!%20Help%20us%20integrate%20decentralized%20technologies%20into%20our%20operations%20and%20business%20models%2C%20please!"
+              target="_blank"
+              className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-footer-kotak-icon m-1 rounded-lg">
+              <FaWhatsapp />
+            </Link>
           </div>
         </div>
       </div>
@@ -83,22 +68,20 @@ const Footer: React.FC = () => {
       {/* Bottom Section */}
       <div className="w-full border-t border-border-tombol mt-4 pt-4 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4">
         {/* Copyrights (Left on lg, Center on md) */}
-        <div className="w-full text-xs text-center sm:text-left text-icon-wording">
-          <p>
-            © 2025 Harmoni Istiqlal X Bukhari Creative Group. All rights
-            reserved.
-          </p>
+        <div className="w-full text-xs text-center sm:text-left text-footer-copyright">
+          <p>© 2025 Voyage. All rights reserved.</p>
+          <p>Officially licensed product of Masjid Istiqlal.</p>
           <div className="flex justify-center sm:justify-start gap-4 mt-2">
             <Link
               href="/terms"
               target="_blank"
-              className="text-xs text-center sm:text-left text-back-ground">
+              className="text-xs text-center sm:text-left text-footer-copyright">
               Terms of Service
             </Link>
             <Link
-              href="/privacy"
+              href="/terms"
               target="_blank"
-              className="text-xs text-center sm:text-left text-back-ground">
+              className="text-xs text-center sm:text-left text-footer-copyright">
               Privacy Policy
             </Link>
           </div>
@@ -107,10 +90,10 @@ const Footer: React.FC = () => {
         {/* Logo & Powered By (Right on lg, Center on md) */}
         <div className="w-full flex justify-center sm:justify-end">
           <Image
-            src="/images/bukhari-fa-logo-footer.png"
+            src="/images/ramadhan-login-16.png"
             alt="Harmoni Istiqlal X Bukhari Creative Group"
-            width={768}
-            height={60}
+            width={477}
+            height={143}
           />
         </div>
       </div>

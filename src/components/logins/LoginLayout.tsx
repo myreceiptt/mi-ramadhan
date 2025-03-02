@@ -3,60 +3,103 @@
 // External libraries
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // Image configurations
-import art from "../../../public/images/bukhari-fa-login-02.png";
-import banner from "../../../public/images/bukhari-fa-login-04-crop.png";
-import powered from "../../../public/images/bukhari-fa-login-06-crop.png";
+import art12 from "../../../public/images/ramadhan-login-12.png";
+import art13 from "../../../public/images/ramadhan-login-13.png";
+import art14 from "../../../public/images/ramadhan-login-14.png";
+import art15 from "../../../public/images/ramadhan-login-15.png";
+import logo from "../../../public/images/ramadhan-login-06.png";
+import supported from "../../../public/images/ramadhan-login-18.png";
+import powered from "../../../public/images/ramadhan-login-19.png";
 
-const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="w-full h-screen grid grid-cols-1 md:grid-cols-2">
-    <div className="w-full relative hidden md:block overflow-hidden">
-      <Image
-        src={art}
-        alt="Bukhari Islamic Art Background for Login Page."
-        width={1080}
-        height={1103}
-        className="absolute inset-0 w-full h-full object-cover object-right"
-        priority
-      />
-    </div>
-    <div className="w-full flex flex-col gap-4 md:gap-8 lg:gap-12 items-center justify-center py-4 px-4 md:px-8 lg:px-12">
-      {/* Headerssss */}
-      <Link href="/">
+// Array of images
+const artImages = [
+  { src: art12, alt: "Sambut Ramadhan di Masjid Istiqlal" },
+  { src: art13, alt: "Ramadhan Kareem with Istiqlal Mosque" },
+  { src: art14, alt: "Ramadhan Mubarak in Traditional Style" },
+  { src: art15, alt: "Celebrate Ramadhan with Unity" },
+];
+
+const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [randomArt, setRandomArt] = useState(artImages[0]); // Default image
+
+  useEffect(() => {
+    // Select a random image on each page load
+    const randomIndex = Math.floor(Math.random() * artImages.length);
+    setRandomArt(artImages[randomIndex]);
+  }, []);
+
+  return (
+    <div className="w-full h-screen grid md:grid-cols-2 grid-cols-1">
+      <div className="w-full relative hidden md:block overflow-hidden">
         <Image
-          src={banner}
-          alt="Bukhari Islamic Art Banner with Partners Logo."
-          width={1080}
-          height={149}
-          className="z-0 object-contain w-full"
+          src={randomArt.src}
+          alt={randomArt.alt}
+          width={1845}
+          height={1920}
+          className="absolute inset-0 w-full h-full object-cover object-right"
           priority
         />
-      </Link>
-      <div id="headers" className="w-full flex flex-col gap-2">
-        <h1 className="flex text-left text-1xl md:text-2xl lg:text-3xl xl:text-4xl font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
-          Get Ready!
-        </h1>
-        <h2 className="flex text-left text-xs md:text-sm lg:text-base xl:text-lg font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
-          Register Now to Immerse Yourself in Galeri Harmoni Istiqlal Digital
-          Experience
-        </h2>
       </div>
-      {children}
-      {/* Footerssss */}
-      <Link href="https://voyage.co.id/" target="_blank">
-        <Image
-          src={powered}
-          alt="Bukhari Islamic Art Powered by VOYAGE."
-          width={1080}
-          height={108}
-          className="z-0 object-contain w-full"
-          priority
-        />
-      </Link>
+      <div className="w-full flex flex-col lg:gap-6 md:gap-4 gap-2 items-center justify-center lg:px-6 md:px-4 py-2 px-2">
+        {/* Headerssss */}
+        <Link href="/" className="w-full flex justify-end">
+          <Image
+            src={logo}
+            alt="Logo Masjid Istiqlal"
+            width={373}
+            height={258}
+            className="z-0 object-contain w-1/4"
+            priority
+          />
+        </Link>
+        <div id="headers" className="w-full flex flex-col gap-2">
+          <h1 className="flex text-left xl:text-4xl lg:text-3xl text-2xl font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
+            Log in Sekarang &
+          </h1>
+          <h1 className="flex text-left xl:text-4xl lg:text-3xl text-2xl font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
+            Raih Berkah Ramadhan!
+          </h1>
+          <h2 className="flex text-left xl:text-lg lg:text-base md:text-sm text-xs font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
+            Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru,
+            kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!
+          </h2>
+        </div>
+        {children}
+        {/* Footerssss */}
+        <div className="w-full flex flex-row">
+          <Link
+            href="https://voyage.co.id/"
+            target="_blank"
+            className="w-full flex">
+            <Image
+              src={supported}
+              alt="Supported by Istiqlal Global Fund"
+              width={899}
+              height={288}
+              className="z-0 object-contain w-2/3"
+              priority
+            />
+          </Link>
+          <Link
+            href="https://voyage.co.id/"
+            target="_blank"
+            className="w-full flex justify-end">
+            <Image
+              src={powered}
+              alt="Powered by VOYAGE"
+              width={899}
+              height={288}
+              className="z-0 object-contain w-2/3"
+              priority
+            />
+          </Link>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default LoginLayout;

@@ -20,17 +20,17 @@ const ConnectButtons: React.FC = () => {
       <ConnectButton
         client={client}
         appMetadata={{
-          name: "Login Bukhari Islamic Art Gallery",
-          url: "https://galeri.harmoniistiqlal.com",
+          name: "Sambut Ramadhan Dengan Kejutan Spesial!",
+          url: "https://ramadhan.voyage.co.id",
           description:
-            "Login to Bukhari Islamic Art Gallery in Harmoni Istiqlal.",
-          logoUrl:
-            "https://galeri.harmoniistiqlal.com/images/bukhari-fa-login-02-11.png",
+            "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
+          logoUrl: "https://ramadhan.voyage.co.id/logo/oslo.png",
         }}
         wallets={dompets}
         accountAbstraction={{
           factoryAddress: "0x82EC684C86b84AC60b5e162EC87d6DCF4213D468",
-          chain: base,
+          // chain: base,
+          chain: baseSepolia,
           sponsorGas: true,
         }}
         chains={chains}

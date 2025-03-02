@@ -6,11 +6,11 @@
 import React from "react";
 
 // Components libraries
-import FeaturedCards from "@/components/contents/FeaturedCards";
+import ClaimAll from "@/components/contents/ClaimAll";
 import DynamicLoginPage from "@/components/logins/DynamicLogin";
 
 const PageHome: React.FC = () => (
-  <DynamicLoginPage ContentComponent={FeaturedCards} />
+  <DynamicLoginPage ContentComponent={ClaimAll} />
 );
 
 export default PageHome;

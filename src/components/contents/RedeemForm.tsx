@@ -260,7 +260,7 @@ const ClaimForm: React.FC = () => {
         </div>
 
         {/* Claim Button */}
-        <ClaimButton
+        <ClaimButton 
           unstyled
           className={`w-full rounded-lg p-2 text-base font-semibold transition-colors duration-300 ease-in-out
             ${

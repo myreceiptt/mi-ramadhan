@@ -33,7 +33,7 @@ export class ErrorBoundary extends React.Component<
       return (
         <div className="flex justify-center items-center h-screen">
           <h2 className="text-left text-sm font-medium text-icon-wording">
-            Something went wrong. Please try again later.
+            Terjadi kesalahan. Coba lagi nanti.
           </h2>
         </div>
       );

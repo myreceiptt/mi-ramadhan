@@ -29,21 +29,21 @@ const ConnectEmbeds: React.FC = () => {
           title: " ",
         }}
         appMetadata={{
-          name: "Login Bukhari Islamic Art Gallery",
-          url: "https://galeri.harmoniistiqlal.com",
+          name: "Sambut Ramadhan Dengan Kejutan Spesial!",
+          url: "https://ramadhan.voyage.co.id",
           description:
-            "Login to Bukhari Islamic Art Gallery in Harmoni Istiqlal.",
-          logoUrl: "https://galeri.harmoniistiqlal.com/logo/oslo.png",
+            "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
+          logoUrl: "https://ramadhan.voyage.co.id/logo/oslo.png",
         }}
         wallets={dompets}
         accountAbstraction={{
           factoryAddress: "0x82EC684C86b84AC60b5e162EC87d6DCF4213D468",
-          chain: base,
-          // chain: baseSepolia,
+          // chain: base,
+          chain: baseSepolia,
           sponsorGas: true,
         }}
         chains={chains}
-        privacyPolicyUrl="/privacy"
+        privacyPolicyUrl="/terms"
         termsOfServiceUrl="/terms"
         showThirdwebBranding={false}
         theme={lightTheme({
