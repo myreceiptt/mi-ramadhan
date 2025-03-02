@@ -6,6 +6,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 // Image configurations
+import art11 from "../../../public/images/ramadhan-login-11.png";
 import art12 from "../../../public/images/ramadhan-login-12.png";
 import art13 from "../../../public/images/ramadhan-login-13.png";
 import art14 from "../../../public/images/ramadhan-login-14.png";
@@ -16,6 +17,7 @@ import powered from "../../../public/images/ramadhan-login-19.png";
 
 // Array of images
 const artImages = [
+  { src: art11, alt: "Sambut Ramadhan dengan Kejutan Spesial!" },
   { src: art12, alt: "Sambut Ramadhan di Masjid Istiqlal" },
   { src: art13, alt: "Ramadhan Kareem with Istiqlal Mosque" },
   { src: art14, alt: "Ramadhan Mubarak in Traditional Style" },
