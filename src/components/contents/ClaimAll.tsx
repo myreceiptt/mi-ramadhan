@@ -34,8 +34,6 @@ const ClaimAll: React.FC = () => {
     return differenceInDays + 1; // Start from token ID 1
   };
 
-  // const tokenId = getTokenId();
-  // const tokenId = 1;
   const [currentTokenId, setCurrentTokenId] = useState(getTokenId());
   const tokenIdBigInt = BigInt(currentTokenId);
 
@@ -243,7 +241,7 @@ const ClaimAll: React.FC = () => {
                 setIsProcessing(true);
                 setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
                 // setPesanKirim(null);
-                // setPesanSukses(null);
+                setPesanSukses(null);
                 setPesanGagal(null);
                 // setErc1155Disabled(false);
               }}
@@ -275,8 +273,8 @@ const ClaimAll: React.FC = () => {
                     `erc1155Disabled_${activeAccount.address}_${currentTokenId}`,
                     "true"
                   );
-                  setErc1155Disabled(true);
                 }
+                setErc1155Disabled(true);
               }}>
               {erc1155Disabled || (ownedNfts && Number(ownedNfts) >= 1)
                 ? "Klaim Lagi Besok!"
@@ -344,8 +342,8 @@ const ClaimAll: React.FC = () => {
                     `erc20Claimed_${activeAccount.address}_${currentTokenId}`,
                     "true"
                   );
-                  setErc20Claimed(true);
                 }
+                setErc20Claimed(true);
               }}>
               {erc20Claimed
                 ? "Klaim Lagi Besok!"
