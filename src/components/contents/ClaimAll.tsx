@@ -34,12 +34,12 @@ const ClaimAll: React.FC = () => {
     return differenceInDays + 1; // Start from token ID 1
   };
 
-  const [currentTokenId, setCurrentTokenId] = useState(getTokenId());
+  const currentTokenId = useState(getTokenId())[0];
   const tokenIdBigInt = BigInt(currentTokenId);
 
-  useEffect(() => {
-    setCurrentTokenId(getTokenId());
-  }, []);
+  // useEffect(() => {
+  //   setCurrentTokenId(getTokenId());
+  // }, []);
 
   // Ensure state variables are properly declared
   const [isProcessing, setIsProcessing] = useState(false);
@@ -139,7 +139,7 @@ const ClaimAll: React.FC = () => {
         {/* Right Column: Form */}
         <div className="flex flex-col gap-2 lg:gap-4 items-start justify-center h-full">
           {/* Title */}
-          <h1 className="text-left xl:text-6xl lg:text-5xl md:text-4xl text-3xl font-normal text-hitam-judul-body tracking-tight justify-start align-middle">
+          <h1 className="text-left xl:text-6xl lg:text-5xl md:text-4xl text-3xl font-normal text-hitam-judul-body tracking-tight justify-start align-middle leading-tight">
             Dapatkan Kupon Digital & Istiqlal Poin Gratis!
           </h1>
 
@@ -168,22 +168,22 @@ const ClaimAll: React.FC = () => {
 
           {/* Success or Error Messages */}
           {pesanTunggu && (
-            <h4 className="text-left text-sm font-normal text-icon-wording">
+            <h4 className="text-left text-sm font-semibold text-footer-coklat">
               {pesanTunggu}
             </h4>
           )}
           {pesanKirim && (
-            <h4 className="text-left text-sm font-normal text-icon-wording">
+            <h4 className="text-left text-sm font-semibold text-footer-coklat">
               {pesanKirim}
             </h4>
           )}
           {pesanSukses && (
-            <h4 className="text-left text-sm font-normal text-icon-wording">
+            <h4 className="text-left text-sm font-semibold text-footer-coklat">
               {pesanSukses}
             </h4>
           )}
           {pesanGagal && (
-            <h4 className="text-left text-sm font-normal text-icon-wording">
+            <h4 className="text-left text-sm font-semibold text-footer-coklat">
               {pesanGagal}
             </h4>
           )}
@@ -277,8 +277,8 @@ const ClaimAll: React.FC = () => {
                 setErc1155Disabled(true);
               }}>
               {erc1155Disabled || (ownedNfts && Number(ownedNfts) >= 1)
-                ? "Klaim Lagi Besok!"
-                : "Klaim Sekarang!"}
+                ? "Klaim Lagi Besok"
+                : "Klaim Kupon Sekarang"}
             </ClaimButton>
 
             {/* Claim Button ERC20 */}
@@ -346,19 +346,19 @@ const ClaimAll: React.FC = () => {
                 setErc20Claimed(true);
               }}>
               {erc20Claimed
-                ? "Klaim Lagi Besok!"
+                ? "Klaim Lagi Besok"
                 : !erc1155Disabled && (!ownedNfts || Number(ownedNfts) < 1)
-                ? "Klaim Kupon Dulu!"
-                : "Klaim Sekarang!"}
+                ? "Klaim Kupon Dulu"
+                : "Klaim Poin Sekarang"}
             </ClaimButton>
           </div>
 
           {/* Note for users. */}
           <div className="flex flex-col gap-0">
-            <h4 className="text-left text-xs font-medium text-icon-wording">
+            <h4 className="text-left text-xs font-normal text-icon-wording">
               &#42;Kupon {nft?.metadata.name || "Tanggal Kupon Digital"}
             </h4>
-            <h4 className="text-left text-xs font-medium text-icon-wording">
+            <h4 className="text-left text-xs font-normal text-icon-wording">
               &#42;Hanya bisa diklaim satu kali per hari.
             </h4>
           </div>

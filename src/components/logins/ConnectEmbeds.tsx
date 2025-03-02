@@ -7,8 +7,7 @@ import { ConnectEmbed, lightTheme } from "thirdweb/react";
 // Blockchain configurations
 import { client } from "@/config/client";
 import { dompets } from "@/config/dompets";
-import { base } from "@/config/rantais";
-import { baseSepolia } from "@/config/rantais";
+import { base, baseSepolia } from "@/config/rantais";
 
 const chains = [base, baseSepolia];
 

@@ -51,17 +51,15 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             alt="Logo Masjid Istiqlal"
             width={373}
             height={258}
-            className="z-0 object-contain w-1/4"
+            className="z-0 object-contain w-1/4 sm:w-1/6 md:w-1/5 lg:w-1/4"
             priority
           />
         </Link>
         <div id="headers" className="w-full flex flex-col gap-2">
           <h1 className="flex text-left xl:text-4xl lg:text-3xl text-2xl font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
-            Log in Sekarang &
+            Log in Sekarang & Raih Berkah Ramadhan!
           </h1>
-          <h1 className="flex text-left xl:text-4xl lg:text-3xl text-2xl font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
-            Raih Berkah Ramadhan!
-          </h1>
+
           <h2 className="flex text-left xl:text-lg lg:text-base md:text-sm text-xs font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
             Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru,
             kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!
@@ -71,7 +69,7 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {/* Footerssss */}
         <div className="w-full flex flex-row">
           <Link
-            href="https://voyage.co.id/"
+            href="https://igf.or.id/"
             target="_blank"
             className="w-full flex">
             <Image
@@ -79,7 +77,7 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               alt="Supported by Istiqlal Global Fund"
               width={899}
               height={288}
-              className="z-0 object-contain w-2/3"
+              className="z-0 object-contain w-2/4"
               priority
             />
           </Link>
@@ -92,7 +90,7 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               alt="Powered by VOYAGE"
               width={899}
               height={288}
-              className="z-0 object-contain w-2/3"
+              className="z-0 object-contain w-2/4"
               priority
             />
           </Link>
