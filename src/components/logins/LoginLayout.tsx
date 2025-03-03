@@ -53,7 +53,7 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             alt="Logo Masjid Istiqlal"
             width={373}
             height={258}
-            className="z-0 object-contain w-1/4 sm:w-1/6 md:w-1/5 lg:w-1/4"
+            className="z-0 object-contain w-2/5 sm:w-1/4 md:w-1/3 lg:w-1/4"
             priority
           />
         </Link>
@@ -68,6 +68,12 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </h2>
         </div>
         {children}
+        <div className="w-full h-auto flex flex-col justify-start items-start">
+          <h4 className="text-left text-xs font-normal text-icon-wording">
+            Dengan melanjutkan, Anda setuju dengan Syarat & Ketentuan serta
+            Kebijakan Privasi.
+          </h4>
+        </div>
         {/* Footerssss */}
         <div className="w-full flex flex-row">
           <Link
@@ -79,7 +85,7 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               alt="Supported by Istiqlal Global Fund"
               width={899}
               height={288}
-              className="z-0 object-contain w-2/4"
+              className="z-0 object-contain lg:w-1/2 md:w-2/3 sm:w-1/2 w-3/4"
               priority
             />
           </Link>
@@ -90,9 +96,9 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <Image
               src={powered}
               alt="Powered by VOYAGE"
-              width={899}
+              width={977}
               height={288}
-              className="z-0 object-contain w-2/4"
+              className="z-0 object-contain lg:w-1/2 md:w-2/3 sm:w-1/2 w-3/4"
               priority
             />
           </Link>

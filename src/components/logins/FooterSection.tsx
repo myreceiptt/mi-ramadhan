@@ -27,8 +27,8 @@ const Footer: React.FC = () => {
         </div>
         <div className="w-full flex flex-col">
           {/* Social Media Links */}
-          <h3 className="sm:text-end text-center text-sm md:text-base font-semibold text-back-ground">
-            Join the Community
+          <h3 className="sm:text-end text-center text-xs sm:text-sm md:text-base font-semibold text-back-ground">
+            Follow & Join Komunitas Kami
           </h3>
           <div className="flex gap-2 mt-2 sm:justify-end justify-center">
             <Link
@@ -69,20 +69,20 @@ const Footer: React.FC = () => {
       <div className="w-full border-t border-border-tombol mt-4 pt-4 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4">
         {/* Copyrights (Left on lg, Center on md) */}
         <div className="w-full text-xs text-center sm:text-left text-footer-copyright">
-          <p>© 2025 Voyage. All rights reserved.</p>
-          <p>Officially licensed product of Masjid Istiqlal.</p>
+          <p>© 2025 Voyage. Seluruh hak cipta dilindungi.</p>
+          <p>Produk resmi berlisensi dari Masjid Istiqlal.</p>
           <div className="flex justify-center sm:justify-start gap-4 mt-2">
             <Link
               href="/terms"
               target="_blank"
               className="text-xs text-center sm:text-left text-footer-copyright">
-              Terms of Service
+              Kebijkan Privasi
             </Link>
             <Link
               href="/terms"
               target="_blank"
               className="text-xs text-center sm:text-left text-footer-copyright">
-              Privacy Policy
+              Syarat & Ketentuan
             </Link>
           </div>
         </div>
@@ -91,7 +91,7 @@ const Footer: React.FC = () => {
         <div className="w-full flex justify-center sm:justify-end">
           <Image
             src="/images/ramadhan-login-16.png"
-            alt="Harmoni Istiqlal X Bukhari Creative Group"
+            alt="Logo Kolaborasi Istiqlal Global Fund dan Voyage."
             width={477}
             height={143}
           />

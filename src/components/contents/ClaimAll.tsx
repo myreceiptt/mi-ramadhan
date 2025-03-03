@@ -6,12 +6,13 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import {
-  getNFT,
   balanceOf as balanceOfERC1155,
+  getActiveClaimCondition as claimCondition1155,
+  getNFT,
 } from "thirdweb/extensions/erc1155";
 import {
   balanceOf as balanceOfERC20,
-  getActiveClaimConditionId,
+  canClaim as claimCondition20,
 } from "thirdweb/extensions/erc20";
 import {
   ClaimButton,
@@ -25,6 +26,18 @@ import { client } from "@/config/client";
 import { kuponRamadhan, p0inIstiqlal } from "@/config/contracts";
 
 const ClaimAll: React.FC = () => {
+  // Ensure state variables are properly declared
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [erc1155Claimed, setErc1155Claimed] = useState(false);
+  const [quantityLimitPerWallet, setQuantityLimitPerWallet] = useState(
+    BigInt(0)
+  );
+  const [erc20Claimed, setErc20Claimed] = useState(false);
+  const [pesanTunggu, setPesanTunggu] = useState<string | null>(null);
+  const [pesanKirim, setPesanKirim] = useState<string | null>(null);
+  const [pesanSukses, setPesanSukses] = useState<string | null>(null);
+  const [pesanGagal, setPesanGagal] = useState<string | null>(null);
+
   const activeAccount = useActiveAccount();
 
   // Generate token ID dynamically based on the current date
@@ -48,17 +61,43 @@ const ClaimAll: React.FC = () => {
   const currentTokenId = useState(getTokenId())[0];
   const tokenIdBigInt = BigInt(currentTokenId);
 
-  // Ensure state variables are properly declared
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [erc1155Disabled, setErc1155Disabled] = useState(false);
-  const [erc20Claimed, setErc20Claimed] = useState(false);
-  const [activeClaimConditionId, setActiveClaimConditionId] = useState<
-    bigint | null
-  >(null);
-  const [pesanTunggu, setPesanTunggu] = useState<string | null>(null);
-  const [pesanKirim, setPesanKirim] = useState<string | null>(null);
-  const [pesanSukses, setPesanSukses] = useState<string | null>(null);
-  const [pesanGagal, setPesanGagal] = useState<string | null>(null);
+  // Fetch ERC1155 Claim Condition (to get `quantityLimitPerWallet`)
+  useEffect(() => {
+    async function fetchClaimCondition1155() {
+      try {
+        const activeCondition1155 = await claimCondition1155({
+          contract: kuponRamadhan,
+          tokenId: tokenIdBigInt,
+        });
+
+        console.log("ERC1155 Claim Condition:", activeCondition1155);
+
+        setQuantityLimitPerWallet(activeCondition1155.quantityLimitPerWallet);
+      } catch (error) {
+        console.error("Error fetching claim condition:", error);
+      }
+    }
+
+    fetchClaimCondition1155();
+  }, [tokenIdBigInt]);
+
+  // Fetch user's ERC1155 NFT Balance
+  const { data: ownedNfts } = useReadContract(balanceOfERC1155, {
+    contract: kuponRamadhan,
+    owner: activeAccount?.address ?? "",
+    tokenId: tokenIdBigInt,
+  });
+
+  // Check if the user has reached the claim limit
+  useEffect(() => {
+    if (ownedNfts !== undefined && quantityLimitPerWallet !== BigInt(0)) {
+      if (BigInt(ownedNfts) >= quantityLimitPerWallet) {
+        setErc1155Claimed(true);
+      } else {
+        setErc1155Claimed(false);
+      }
+    }
+  }, [ownedNfts, quantityLimitPerWallet]);
 
   // Fetch NFT metadata
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
@@ -66,94 +105,37 @@ const ClaimAll: React.FC = () => {
     tokenId: tokenIdBigInt,
   });
 
-  // Fetch user's owned NFTs
-  const { data: ownedNfts } = useReadContract(balanceOfERC1155, {
-    contract: kuponRamadhan,
-    owner: activeAccount?.address ?? "",
-    tokenId: tokenIdBigInt,
-    queryOptions: { enabled: !!activeAccount?.address && !!currentTokenId },
-  });
+  // Fetch ERC20 Claim Condition (to get `result`)
+  useEffect(() => {
+    async function fetchClaimCondition20() {
+      try {
+        const activeCondition20 = await claimCondition20({
+          contract: p0inIstiqlal,
+          claimer: activeAccount?.address ?? "",
+          quantity: "1",
+        });
+
+        console.log("ERC20 Claim Condition:", activeCondition20);
+        console.log("Active Account:", activeAccount?.address);
+
+        if (!activeCondition20.result) {
+          setErc20Claimed(true);
+        } else {
+          setErc20Claimed(false);
+        }
+      } catch (error) {
+        console.error("Error fetching claim condition:", error);
+      }
+    }
+
+    fetchClaimCondition20();
+  }, [activeAccount?.address]);
 
   // Fetch user's ERC20 Token Balance
   const { data: poinBalance } = useReadContract(balanceOfERC20, {
     contract: p0inIstiqlal,
     address: activeAccount?.address ?? "",
   });
-
-  // Ambil Active Claim Condition ID lebih dulu
-  useEffect(() => {
-    const fetchClaimConditionId = async () => {
-      try {
-        const id = await getActiveClaimConditionId({ contract: p0inIstiqlal });
-        console.log("Fetched Active Claim Condition ID:", id);
-        setActiveClaimConditionId(id);
-      } catch (error) {
-        console.error("Error fetching Active Claim Condition ID:", error);
-      }
-    };
-    if (activeAccount) fetchClaimConditionId();
-  }, [activeAccount]);
-
-  // Gunakan useEffect tambahan untuk memastikan useReadContract hanya berjalan setelah activeClaimConditionId tersedia
-  const [isClaimConditionReady, setIsClaimConditionReady] = useState(false);
-
-  useEffect(() => {
-    if (activeClaimConditionId !== null) {
-      setIsClaimConditionReady(true);
-    }
-  }, [activeClaimConditionId]);
-
-  useEffect(() => {
-    console.log("Calling getSupplyClaimedByWallet with:", {
-      activeClaimConditionId,
-      address: activeAccount?.address,
-    });
-  }, [activeClaimConditionId, activeAccount]);
-
-  const { data: claimedAmount } = useReadContract({
-    contract: p0inIstiqlal,
-    method: "getSupplyClaimedByWallet",
-    params: isClaimConditionReady
-      ? [activeClaimConditionId, activeAccount?.address ?? ""]
-      : [],
-
-    queryOptions: {
-      enabled: isClaimConditionReady && !!activeAccount?.address,
-    },
-  });
-
-  // Make it true...
-  useEffect(() => {
-    console.log("Owned NFTs:", ownedNfts);
-    if (ownedNfts !== undefined) {
-      setErc1155Disabled(Number(ownedNfts) >= 1);
-    }
-  }, [ownedNfts]);
-
-  useEffect(() => {
-    console.log("Claimed Amount:", claimedAmount);
-    if (claimedAmount !== undefined) {
-      setErc20Claimed(Number(claimedAmount) > 0);
-    }
-  }, [claimedAmount]);
-
-  const handleErc20Claim = () => {
-    setIsProcessing(true);
-    setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
-    // setPesanKirim(null);
-    setPesanSukses(null);
-    setPesanGagal(null);
-    // setErc20Claimed(false);
-  };
-
-  const handleErc20Confirmed = () => {
-    setIsProcessing(false);
-    // setPesanTunggu(null);
-    setPesanKirim(null);
-    setPesanSukses("Alhamdulillah! Poin berhasil diklaim.");
-    // setPesanGagal(null);
-    setErc20Claimed(true);
-  };
 
   // Ensure currentTokenId exists, otherwise show this "Memuat..." message.
   if (!currentTokenId || isNftLoading) {
@@ -203,7 +185,7 @@ const ClaimAll: React.FC = () => {
               &#9673;
             </span>
             <h1 className="text-left text-sm font-medium text-icon-wording">
-              <Link href="https://voyage.co.id/" target="_blank">
+              <Link href="https://igf.or.id/" target="_blank">
                 Masjid Istiqlal
               </Link>
             </h1>
@@ -241,19 +223,13 @@ const ClaimAll: React.FC = () => {
 
           {/* Tokens Info */}
           <div className="w-full grid grid-cols-2 gap-2">
-            {/* <h2 className="text-left text-sm font-medium text-icon-wording">
-              Persedian Kupon
-            </h2> */}
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Kupon Anda
+              Kupon Anda Hari Ini
             </h2>
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Poin Anda
+              Total Poin Anda
             </h2>
 
-            {/* <h2 className="text-left xl:text-3xl lg:text-2xl md:text-xl text-lg font-semibold text-hitam-judul-body">
-              10.000
-            </h2> */}
             <h2 className="text-left xl:text-3xl lg:text-2xl md:text-xl text-lg font-semibold text-hitam-judul-body">
               {ownedNfts?.toString() ?? "0"}
             </h2>
@@ -268,7 +244,7 @@ const ClaimAll: React.FC = () => {
               unstyled
               className={`w-full rounded-lg p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
                 ${
-                  erc1155Disabled || isProcessing
+                  isProcessing || erc1155Claimed
                     ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
                     : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
                 }
@@ -281,14 +257,14 @@ const ClaimAll: React.FC = () => {
                 quantity: 1n,
                 tokenId: tokenIdBigInt,
               }}
-              disabled={Boolean(erc1155Disabled || isProcessing)}
+              disabled={Boolean(isProcessing || erc1155Claimed)}
               onClick={() => {
                 setIsProcessing(true);
                 setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
                 // setPesanKirim(null);
                 setPesanSukses(null);
                 setPesanGagal(null);
-                // setErc1155Disabled(false);
+                // setErc1155Claimed(false);
               }}
               onTransactionSent={() => {
                 // setIsProcessing(true);
@@ -296,7 +272,7 @@ const ClaimAll: React.FC = () => {
                 setPesanKirim("Kupon sedang diklaim.");
                 // setPesanSukses(null);
                 // setPesanGagal(null);
-                // setErc1155Disabled(false);
+                // setErc1155Claimed(false);
               }}
               onError={(error) => {
                 setIsProcessing(false);
@@ -304,7 +280,7 @@ const ClaimAll: React.FC = () => {
                 setPesanKirim(null);
                 // setPesanSukses(null);
                 setPesanGagal(`${error.message}`);
-                // setErc1155Disabled(false);
+                // setErc1155Claimed(false);
               }}
               onTransactionConfirmed={async () => {
                 setIsProcessing(false);
@@ -312,9 +288,9 @@ const ClaimAll: React.FC = () => {
                 setPesanKirim(null);
                 setPesanSukses("Alhamdulillah! Kupon berhasil diklaim.");
                 // setPesanGagal(null);
-                setErc1155Disabled(true);
+                setErc1155Claimed(true);
               }}>
-              {erc1155Disabled ? "Klaim Lagi Besok" : "Klaim Kupon Sekarang"}
+              {erc1155Claimed ? "Klaim Lagi Besok" : "Klaim Kupon Sekarang"}
             </ClaimButton>
 
             {/* Claim Button ERC20 */}
@@ -322,10 +298,7 @@ const ClaimAll: React.FC = () => {
               unstyled
               className={`w-full rounded-lg p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
                 ${
-                  !erc1155Disabled ||
-                  isProcessing ||
-                  erc20Claimed ||
-                  activeClaimConditionId === null
+                  isProcessing || erc20Claimed
                     ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
                     : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
                 }
@@ -337,13 +310,15 @@ const ClaimAll: React.FC = () => {
                 type: "ERC20",
                 quantity: "786",
               }}
-              disabled={Boolean(
-                !erc1155Disabled ||
-                  isProcessing ||
-                  erc20Claimed ||
-                  activeClaimConditionId === null
-              )}
-              onClick={handleErc20Claim}
+              disabled={Boolean(isProcessing || erc20Claimed)}
+              onClick={() => {
+                setIsProcessing(true);
+                setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
+                // setPesanKirim(null);
+                setPesanSukses(null);
+                setPesanGagal(null);
+                // setErc20Claimed(false);
+              }}
               onTransactionSent={() => {
                 // setIsProcessing(true);
                 setPesanTunggu(null);
@@ -360,12 +335,15 @@ const ClaimAll: React.FC = () => {
                 setPesanGagal(`${error.message}`);
                 // setErc20Claimed(false);
               }}
-              onTransactionConfirmed={handleErc20Confirmed}>
-              {erc20Claimed || activeClaimConditionId === null
-                ? "Klaim Lagi Besok"
-                : !erc1155Disabled
-                ? "Klaim Kupon Dulu"
-                : "Klaim Poin Sekarang"}
+              onTransactionConfirmed={() => {
+                setIsProcessing(false);
+                // setPesanTunggu(null);
+                setPesanKirim(null);
+                setPesanSukses("Alhamdulillah! Poin berhasil diklaim.");
+                // setPesanGagal(null);
+                setErc20Claimed(true);
+              }}>
+              {erc20Claimed ? "Klaim Lagi Besok" : "Klaim Poin Sekarang"}
             </ClaimButton>
           </div>
 

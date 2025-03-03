@@ -13,7 +13,7 @@ export default function Subscribe() {
 
     // Basic Email Validation
     if (!email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      setStatusMessage("Please enter a valid email address.");
+      setStatusMessage("Masukkan alamat email dengan benar.");
       return;
     }
 
@@ -38,14 +38,14 @@ export default function Subscribe() {
 
       const result = await response.json();
       if (result.success) {
-        setStatusMessage("Thank you for subscribing!");
+        setStatusMessage("Terimakasih sudah subscribe!");
         setEmail(""); // Clear input field
       } else {
-        setStatusMessage("Subscription failed. Please try again.");
+        setStatusMessage("Subscribe gagal. Silahkan coba lagi.");
       }
     } catch (error) {
       console.error("Subscription error:", error); // Logs the error to console
-      setStatusMessage("An error occurred. Please try again later.");
+      setStatusMessage("Terjadi error. Coba lagi nanti.");
     } finally {
       setLoading(false);
     }
@@ -53,8 +53,8 @@ export default function Subscribe() {
 
   return (
     <>
-      <h3 className="sm:text-left text-center text-sm md:text-base font-semibold text-back-ground">
-        Catch our latest updates
+      <h3 className="sm:text-left text-center text-xs sm:text-sm md:text-base font-semibold text-back-ground">
+        Jangan Lewatkan Update Terbaru Dari Kami
       </h3>
 
       <form onSubmit={handleSubmit} className="w-full">
@@ -62,7 +62,7 @@ export default function Subscribe() {
           <input
             type="email"
             name="email"
-            placeholder="Enter your email address"
+            placeholder="Masukkan alamat email Anda"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="text-xs md:text-sm w-2/3 lg:w-3/5 px-2 py-0 border border-border-tombol rounded-l-lg bg-transparent focus:outline-hidden placeholder-border-tombol text-back-ground"
