@@ -13,6 +13,17 @@ import { tekeks } from "@/config/tekeks";
 import { tokeks } from "@/config/tokeks";
 
 const chains = [base, baseSepolia];
+// Extract token addresses with fallback to first token in the list
+const displayBalanceToken: Record<number, string> = {
+  [base.id]:
+    tokeks[base.id]?.find((token) => token.symbol === "IGF")?.address ??
+    tokeks[base.id]?.[0]?.address ??
+    "0x237b1188F8BAC61f2E4e0EdF2D933F827262157C",
+  [baseSepolia.id]:
+    tokeks[baseSepolia.id]?.find((token) => token.symbol === "IGF")?.address ??
+    tokeks[baseSepolia.id]?.[0]?.address ??
+    "0x204717A95a9362660dCF026cdE4cEB1586FfD576",
+};
 
 const ConnectButtons: React.FC = () => {
   return (
@@ -37,10 +48,7 @@ const ConnectButtons: React.FC = () => {
         supportedTokens={tokeks}
         supportedNFTs={tekeks}
         detailsButton={{
-          displayBalanceToken: {
-            [base.id]: "0x237b1188F8BAC61f2E4e0EdF2D933F827262157C",
-            [baseSepolia.id]: "0x204717A95a9362660dCF026cdE4cEB1586FfD576",
-          },
+          displayBalanceToken,
           render: () => (
             <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
               <FaUserLarge />

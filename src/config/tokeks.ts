@@ -12,10 +12,10 @@ export const tokeks = {
       icon: "/erc20-icons/bon.png",
     },
     {
-      address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: "/erc20-icons/usdc.png",
+      address: "0xd0Ed4169B49940dCAF71e91Ae5968d24e0A53ae0",
+      name: "Poin Istiqlal",
+      symbol: "IGF",
+      icon: "/erc20-icons/igf.png",
     },
   ],
   [baseSepolia.id]: [
@@ -26,10 +26,10 @@ export const tokeks = {
       icon: "/erc20-icons/bon.png",
     },
     {
-      address: "0x5dEaC602762362FE5f135FA5904351916053cF70",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: "/erc20-icons/usdc.png",
+      address: "0xd0Ed4169B49940dCAF71e91Ae5968d24e0A53ae0",
+      name: "Poin Istiqlal",
+      symbol: "IGF",
+      icon: "/erc20-icons/igf.png",
     },
   ],
 };

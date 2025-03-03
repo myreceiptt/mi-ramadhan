@@ -15,6 +15,13 @@ export const memoraOneOnBase = getContract({
   client,
 });
 
+// Kupon Ramadhan on Base Sepolia.
+export const kuponRamadhan = getContract({
+  address: "0xE58C2Bde65D61C452d12dE4DB6B9D19525c73E2f",
+  chain: baseSepolia,
+  client,
+});
+
 // MEMORA ZER0 on Base Sepolia.
 export const memoraZer0 = getContract({
   address: "0xc3046681149f96746b362a64472fD4B1cd1E33B2",
@@ -34,6 +41,13 @@ export const bonVoyageDrop = getContract({
 export const usdCoinOnBase = getContract({
   address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
   chain: base,
+  client,
+});
+
+// Poin Istiqlal on Base Sepolia.
+export const p0inIstiqlal = getContract({
+  address: "0xd0Ed4169B49940dCAF71e91Ae5968d24e0A53ae0",
+  chain: baseSepolia,
   client,
 });
 

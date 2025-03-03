@@ -9,7 +9,10 @@ import {
   getNFT,
   balanceOf as balanceOfERC1155,
 } from "thirdweb/extensions/erc1155";
-import { balanceOf as balanceOfERC20 } from "thirdweb/extensions/erc20";
+import {
+  balanceOf as balanceOfERC20,
+  getActiveClaimConditionId,
+} from "thirdweb/extensions/erc20";
 import {
   ClaimButton,
   MediaRenderer,
@@ -19,32 +22,39 @@ import {
 
 // Blockchain configurations
 import { client } from "@/config/client";
-import { b0nV0yageDrop, memoraZer0 } from "@/config/contracts";
+import { kuponRamadhan, p0inIstiqlal } from "@/config/contracts";
 
 const ClaimAll: React.FC = () => {
   const activeAccount = useActiveAccount();
 
   // Generate token ID dynamically based on the current date
   const getTokenId = () => {
-    const startDate = new Date("2025-03-01");
-    const today = new Date();
+    const startDate = new Date(Date.UTC(2025, 2, 1)); // 1 Maret 2025, UTC
+    // const startDate = new Date(Date.UTC(2025, 1, 28)); // 28 Februari 2025, UTC
+
+    // Ambil waktu saat ini dalam zona waktu Indonesia (GMT+7)
+    const now = new Date();
+    const jakartaOffset = 7 * 60 * 60 * 1000; // 7 jam dalam milidetik
+    const todayJakarta = new Date(now.getTime() + jakartaOffset);
+
+    // Hitung selisih hari berdasarkan GMT+7
     const differenceInDays = Math.floor(
-      (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      (todayJakarta.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
     );
+
     return differenceInDays + 1; // Start from token ID 1
   };
 
   const currentTokenId = useState(getTokenId())[0];
   const tokenIdBigInt = BigInt(currentTokenId);
 
-  // useEffect(() => {
-  //   setCurrentTokenId(getTokenId());
-  // }, []);
-
   // Ensure state variables are properly declared
   const [isProcessing, setIsProcessing] = useState(false);
   const [erc1155Disabled, setErc1155Disabled] = useState(false);
   const [erc20Claimed, setErc20Claimed] = useState(false);
+  const [activeClaimConditionId, setActiveClaimConditionId] = useState<
+    bigint | null
+  >(null);
   const [pesanTunggu, setPesanTunggu] = useState<string | null>(null);
   const [pesanKirim, setPesanKirim] = useState<string | null>(null);
   const [pesanSukses, setPesanSukses] = useState<string | null>(null);
@@ -52,13 +62,13 @@ const ClaimAll: React.FC = () => {
 
   // Fetch NFT metadata
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
-    contract: memoraZer0,
+    contract: kuponRamadhan,
     tokenId: tokenIdBigInt,
   });
 
   // Fetch user's owned NFTs
   const { data: ownedNfts } = useReadContract(balanceOfERC1155, {
-    contract: memoraZer0,
+    contract: kuponRamadhan,
     owner: activeAccount?.address ?? "",
     tokenId: tokenIdBigInt,
     queryOptions: { enabled: !!activeAccount?.address && !!currentTokenId },
@@ -66,43 +76,84 @@ const ClaimAll: React.FC = () => {
 
   // Fetch user's ERC20 Token Balance
   const { data: poinBalance } = useReadContract(balanceOfERC20, {
-    contract: b0nV0yageDrop,
+    contract: p0inIstiqlal,
     address: activeAccount?.address ?? "",
   });
 
-  // Saat komponen dimuat, ambil status klaim dari localStorage
+  // Ambil Active Claim Condition ID lebih dulu
   useEffect(() => {
-    if (activeAccount?.address) {
-      const storedErc1155Disabled = localStorage.getItem(
-        `erc1155Disabled_${activeAccount.address}_${currentTokenId}`
-      );
-      setErc1155Disabled(storedErc1155Disabled === "true");
+    const fetchClaimConditionId = async () => {
+      try {
+        const id = await getActiveClaimConditionId({ contract: p0inIstiqlal });
+        console.log("Fetched Active Claim Condition ID:", id);
+        setActiveClaimConditionId(id);
+      } catch (error) {
+        console.error("Error fetching Active Claim Condition ID:", error);
+      }
+    };
+    if (activeAccount) fetchClaimConditionId();
+  }, [activeAccount]);
 
-      const storedErc20Claimed = localStorage.getItem(
-        `erc20Claimed_${activeAccount.address}_${currentTokenId}`
-      );
-      setErc20Claimed(storedErc20Claimed === "true");
-    }
-  }, [activeAccount?.address, currentTokenId]);
-
-  // Simpan ke localStorage setiap kali status klaim berubah
-  useEffect(() => {
-    if (activeAccount?.address) {
-      localStorage.setItem(
-        `erc1155Disabled_${activeAccount.address}_${currentTokenId}`,
-        String(erc1155Disabled)
-      );
-    }
-  }, [erc1155Disabled, activeAccount?.address, currentTokenId]);
+  // Gunakan useEffect tambahan untuk memastikan useReadContract hanya berjalan setelah activeClaimConditionId tersedia
+  const [isClaimConditionReady, setIsClaimConditionReady] = useState(false);
 
   useEffect(() => {
-    if (activeAccount?.address) {
-      localStorage.setItem(
-        `erc20Claimed_${activeAccount.address}_${currentTokenId}`,
-        String(erc20Claimed)
-      );
+    if (activeClaimConditionId !== null) {
+      setIsClaimConditionReady(true);
     }
-  }, [erc20Claimed, activeAccount?.address, currentTokenId]);
+  }, [activeClaimConditionId]);
+
+  useEffect(() => {
+    console.log("Calling getSupplyClaimedByWallet with:", {
+      activeClaimConditionId,
+      address: activeAccount?.address,
+    });
+  }, [activeClaimConditionId, activeAccount]);
+
+  const { data: claimedAmount } = useReadContract({
+    contract: p0inIstiqlal,
+    method: "getSupplyClaimedByWallet",
+    params: isClaimConditionReady
+      ? [activeClaimConditionId, activeAccount?.address ?? ""]
+      : [],
+
+    queryOptions: {
+      enabled: isClaimConditionReady && !!activeAccount?.address,
+    },
+  });
+
+  // Make it true...
+  useEffect(() => {
+    console.log("Owned NFTs:", ownedNfts);
+    if (ownedNfts !== undefined) {
+      setErc1155Disabled(Number(ownedNfts) >= 1);
+    }
+  }, [ownedNfts]);
+
+  useEffect(() => {
+    console.log("Claimed Amount:", claimedAmount);
+    if (claimedAmount !== undefined) {
+      setErc20Claimed(Number(claimedAmount) > 0);
+    }
+  }, [claimedAmount]);
+
+  const handleErc20Claim = () => {
+    setIsProcessing(true);
+    setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
+    // setPesanKirim(null);
+    setPesanSukses(null);
+    setPesanGagal(null);
+    // setErc20Claimed(false);
+  };
+
+  const handleErc20Confirmed = () => {
+    setIsProcessing(false);
+    // setPesanTunggu(null);
+    setPesanKirim(null);
+    setPesanSukses("Alhamdulillah! Poin berhasil diklaim.");
+    // setPesanGagal(null);
+    setErc20Claimed(true);
+  };
 
   // Ensure currentTokenId exists, otherwise show this "Memuat..." message.
   if (!currentTokenId || isNftLoading) {
@@ -217,26 +268,20 @@ const ClaimAll: React.FC = () => {
               unstyled
               className={`w-full rounded-lg p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
                 ${
-                  erc1155Disabled ||
-                  (ownedNfts && Number(ownedNfts) >= 1) ||
-                  isProcessing
+                  erc1155Disabled || isProcessing
                     ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
                     : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
                 }
             `}
-              contractAddress={memoraZer0.address}
-              chain={memoraZer0.chain}
+              contractAddress={kuponRamadhan.address}
+              chain={kuponRamadhan.chain}
               client={client}
               claimParams={{
                 type: "ERC1155",
                 quantity: 1n,
                 tokenId: tokenIdBigInt,
               }}
-              disabled={Boolean(
-                erc1155Disabled ||
-                  (ownedNfts && Number(ownedNfts) >= 1) ||
-                  isProcessing
-              )}
+              disabled={Boolean(erc1155Disabled || isProcessing)}
               onClick={() => {
                 setIsProcessing(true);
                 setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
@@ -267,18 +312,9 @@ const ClaimAll: React.FC = () => {
                 setPesanKirim(null);
                 setPesanSukses("Alhamdulillah! Kupon berhasil diklaim.");
                 // setPesanGagal(null);
-                // Simpan status klaim langsung ke localStorage
-                if (activeAccount?.address) {
-                  localStorage.setItem(
-                    `erc1155Disabled_${activeAccount.address}_${currentTokenId}`,
-                    "true"
-                  );
-                }
                 setErc1155Disabled(true);
               }}>
-              {erc1155Disabled || (ownedNfts && Number(ownedNfts) >= 1)
-                ? "Klaim Lagi Besok"
-                : "Klaim Kupon Sekarang"}
+              {erc1155Disabled ? "Klaim Lagi Besok" : "Klaim Kupon Sekarang"}
             </ClaimButton>
 
             {/* Claim Button ERC20 */}
@@ -286,34 +322,28 @@ const ClaimAll: React.FC = () => {
               unstyled
               className={`w-full rounded-lg p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
                 ${
-                  (!erc1155Disabled && (!ownedNfts || Number(ownedNfts) < 1)) ||
+                  !erc1155Disabled ||
                   isProcessing ||
-                  erc20Claimed
+                  erc20Claimed ||
+                  activeClaimConditionId === null
                     ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
                     : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
                 }
             `}
-              contractAddress={b0nV0yageDrop.address}
-              chain={b0nV0yageDrop.chain}
+              contractAddress={p0inIstiqlal.address}
+              chain={p0inIstiqlal.chain}
               client={client}
               claimParams={{
                 type: "ERC20",
                 quantity: "786",
               }}
               disabled={Boolean(
-                (!erc1155Disabled &&
-                  (ownedNfts === undefined || Number(ownedNfts) < 1)) ||
+                !erc1155Disabled ||
                   isProcessing ||
-                  erc20Claimed
+                  erc20Claimed ||
+                  activeClaimConditionId === null
               )}
-              onClick={() => {
-                setIsProcessing(true);
-                setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
-                // setPesanKirim(null);
-                setPesanSukses(null);
-                setPesanGagal(null);
-                // setErc20Claimed(false);
-              }}
+              onClick={handleErc20Claim}
               onTransactionSent={() => {
                 // setIsProcessing(true);
                 setPesanTunggu(null);
@@ -330,24 +360,10 @@ const ClaimAll: React.FC = () => {
                 setPesanGagal(`${error.message}`);
                 // setErc20Claimed(false);
               }}
-              onTransactionConfirmed={async () => {
-                setIsProcessing(false);
-                // setPesanTunggu(null);
-                setPesanKirim(null);
-                setPesanSukses("Alhamdulillah! Poin berhasil diklaim.");
-                // setPesanGagal(null);
-                // Simpan status klaim ke localStorage langsung saat transaksi berhasil
-                if (activeAccount?.address) {
-                  localStorage.setItem(
-                    `erc20Claimed_${activeAccount.address}_${currentTokenId}`,
-                    "true"
-                  );
-                }
-                setErc20Claimed(true);
-              }}>
-              {erc20Claimed
+              onTransactionConfirmed={handleErc20Confirmed}>
+              {erc20Claimed || activeClaimConditionId === null
                 ? "Klaim Lagi Besok"
-                : !erc1155Disabled && (!ownedNfts || Number(ownedNfts) < 1)
+                : !erc1155Disabled
                 ? "Klaim Kupon Dulu"
                 : "Klaim Poin Sekarang"}
             </ClaimButton>
