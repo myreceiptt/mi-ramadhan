@@ -70,8 +70,10 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {children}
         <div className="w-full h-auto flex flex-col justify-start items-start">
           <h4 className="text-left text-xs font-normal text-icon-wording">
-            Dengan melanjutkan, Anda setuju dengan Syarat & Ketentuan serta
-            Kebijakan Privasi.
+            Dengan melanjutkan, Anda setuju dengan{" "}
+            <Link href="/terms" target="_blank" className="text-hitam-judul-body">
+              Syarat & Ketentuan serta Kebijakan Privasi.
+            </Link>
           </h4>
         </div>
         {/* Footerssss */}
