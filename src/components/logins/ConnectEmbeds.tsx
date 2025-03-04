@@ -13,8 +13,13 @@ const chains = [base, baseSepolia];
 
 const ConnectEmbeds: React.FC = () => {
   const embedStyle: React.CSSProperties = {
-    width: "100%",
+    // color: "#707070",
     background: "transparent",
+    // height: "auto",
+    width: "100%",
+    // position: "relative",
+    // border: 1px solid "#DFDFDF",
+    // overflow: "hidden",
   };
 
   return (
@@ -22,27 +27,28 @@ const ConnectEmbeds: React.FC = () => {
       id="logins"
       className="w-full h-auto flex flex-col justify-center items-center">
       <ConnectEmbed
-        client={client}
-        modalSize="compact"
-        header={{
-          title: " ",
-        }}
-        appMetadata={{
-          name: "Sambut Ramadhan Dengan Kejutan Spesial!",
-          url: "https://ramadhan.voyage.co.id",
-          description:
-            "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
-          logoUrl: "https://ramadhan.voyage.co.id/logo/oslo.png",
-        }}
-        wallets={dompets}
         accountAbstraction={{
           factoryAddress: "0x82EC684C86b84AC60b5e162EC87d6DCF4213D468",
           // chain: base,
           chain: baseSepolia,
           sponsorGas: true,
         }}
+        appMetadata={{
+          name: "Sambut Ramadhan Dengan Kejutan Spesial!",
+          url: "https://ramadhan.voyage.co.id",
+          description:
+            "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
+          logoUrl: "https://ramadhan.voyage.co.id/logos/voyage.png",
+        }}
         chains={chains}
+        client={client}
+        header={{
+          title: " ",
+          // titleIcon: "https://ramadhan.voyage.co.id/logos/oslo.png;",
+        }}
+        modalSize="compact"
         showThirdwebBranding={false}
+        style={embedStyle}
         theme={lightTheme({
           colors: {
             accentButtonBg: "#171717", // Button for Retry & Try Again
@@ -76,7 +82,7 @@ const ConnectEmbeds: React.FC = () => {
             // tooltipText: "#707070",
           },
         })}
-        style={embedStyle}
+        wallets={dompets}
       />
     </div>
   );

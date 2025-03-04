@@ -3,7 +3,7 @@
 // External libraries
 import React from "react";
 import { FaUserLarge } from "react-icons/fa6";
-import { ConnectButton } from "thirdweb/react";
+import { ConnectButton, lightTheme } from "thirdweb/react";
 
 // Blockchain configurations
 import { client } from "@/config/client";
@@ -29,24 +29,29 @@ const ConnectButtons: React.FC = () => {
   return (
     <div id="connected">
       <ConnectButton
-        client={client}
-        appMetadata={{
-          name: "Sambut Ramadhan Dengan Kejutan Spesial!",
-          url: "https://ramadhan.voyage.co.id",
-          description:
-            "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
-          logoUrl: "https://ramadhan.voyage.co.id/logo/oslo.png",
-        }}
-        wallets={dompets}
         accountAbstraction={{
           factoryAddress: "0x82EC684C86b84AC60b5e162EC87d6DCF4213D468",
           // chain: base,
           chain: baseSepolia,
           sponsorGas: true,
         }}
+        appMetadata={{
+          name: "Sambut Ramadhan Dengan Kejutan Spesial!",
+          url: "https://ramadhan.voyage.co.id",
+          description:
+            "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
+          logoUrl: "https://ramadhan.voyage.co.id/logos/voyage.png",
+        }}
         chains={chains}
-        supportedTokens={tokeks}
-        supportedNFTs={tekeks}
+        client={client}
+        connectModal={{
+          privacyPolicyUrl: "/terms",
+          showThirdwebBranding: false,
+          size: "compact",
+          termsOfServiceUrl: "/terms",
+          title: "Silahkan Log In!",
+          titleIcon: "https://ramadhan.voyage.co.id/logos/oslo.png;",
+        }}
         detailsButton={{
           displayBalanceToken,
           render: () => (
@@ -59,7 +64,42 @@ const ConnectButtons: React.FC = () => {
           assetTabs: ["token", "nft"],
           // assetTabs: [],
         }}
-        theme="light"
+        supportedNFTs={tekeks}
+        supportedTokens={tokeks}
+        theme={lightTheme({
+          colors: {
+            accentButtonBg: "#171717", // Button for Retry & Try Again
+            accentButtonText: "#707070", // Button for Retry & Try Again
+            accentText: "#171717", // Hyperlink text for Terms & Privacy
+            borderColor: "#DFDFDF", // All border color
+            // connectedButtonBg: string;
+            // connectedButtonBgHover: string;
+            // danger: string;
+            // inputAutofillBg: string;
+            // modalBg: string;
+            // modalOverlayBg: string;
+            // primaryButtonBg: string;
+            // primaryButtonText: string;
+            primaryText: "#707070", // Passkey & Connect a Wallet text
+            // scrollbarBg: string;
+            // secondaryButtonBg: string;
+            // secondaryButtonHoverBg: string;
+            secondaryButtonText: "#707070", // Google & Apple text
+            // secondaryIconColor: string;
+            // secondaryIconHoverBg: string;
+            // secondaryIconHoverColor: string;
+            // secondaryText: string;
+            selectedTextBg: "#707070",
+            selectedTextColor: "#F9F9F9",
+            // separatorLine: string;
+            // skeletonBg: string;
+            // success: string;
+            // tertiaryBg: string;
+            // tooltipBg: string;
+            // tooltipText: "#707070",
+          },
+        })}
+        wallets={dompets}
       />
     </div>
   );
