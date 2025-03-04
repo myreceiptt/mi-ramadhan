@@ -23,19 +23,6 @@ export default function WalletInfo({ account }: WalletInfoProps) {
     client,
   });
 
-  // Fetch ERC-20 Token Balances (Auto Syncs with Active Chain)
-  const tokenBalances =
-    activeChain && tokeks[activeChain.id]
-      ? tokeks[activeChain.id].map((token) =>
-          useWalletBalance({
-            address: account?.address,
-            chain: activeChain,
-            client,
-            tokenAddress: token.address,
-          })
-        )
-      : [];
-
   return (
     <div className="p-4 bg-white shadow-md rounded-xl w-full max-w-sm flex flex-col gap-4">
       {/* Wallet Address */}
@@ -55,20 +42,29 @@ export default function WalletInfo({ account }: WalletInfoProps) {
       </div>
 
       {/* ERC-20 Token Balances */}
-      {tokenBalances?.map(({ data: tokenBalance, isLoading }, index) => (
-        <div
-          key={index}
-          className="flex items-center gap-2 text-hitam-judul-body">
-          <FaCoins className="text-xl" />
-          <p className="text-sm">
-            {isLoading
-              ? "Loading..."
-              : `${tokenBalance?.displayValue} ${
-                  tokeks[activeChain?.id || "0"][index].symbol
-                }`}
-          </p>
-        </div>
-      ))}
+      {activeChain &&
+        tokeks[activeChain.id]?.map((token, index) => {
+          // Panggil useWalletBalance secara terpisah untuk setiap token
+          const { data: tokenBalance, isLoading } = useWalletBalance({
+            address: account?.address,
+            chain: activeChain,
+            client,
+            tokenAddress: token.address,
+          });
+
+          return (
+            <div
+              key={index}
+              className="flex items-center gap-2 text-hitam-judul-body">
+              <FaCoins className="text-xl" />
+              <p className="text-sm">
+                {isLoading
+                  ? "Loading..."
+                  : `${tokenBalance?.displayValue} ${token.symbol}`}
+              </p>
+            </div>
+          );
+        })}
     </div>
   );
 }
