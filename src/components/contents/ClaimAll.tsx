@@ -28,11 +28,11 @@ import { kuponRamadhan, p0inIstiqlal } from "@/config/contracts";
 const ClaimAll: React.FC = () => {
   // Ensure state variables are properly declared
   const [isProcessing, setIsProcessing] = useState(false);
-  const [erc1155Claimed, setErc1155Claimed] = useState(false);
+  const [erc1155Claimed, setErc1155Claimed] = useState(true);
   const [quantityLimitPerWallet, setQuantityLimitPerWallet] = useState(
     BigInt(0)
   );
-  const [erc20Claimed, setErc20Claimed] = useState(false);
+  const [erc20Claimed, setErc20Claimed] = useState(true);
   const [pesanTunggu, setPesanTunggu] = useState<string | null>(null);
   const [pesanKirim, setPesanKirim] = useState<string | null>(null);
   const [pesanSukses, setPesanSukses] = useState<string | null>(null);
