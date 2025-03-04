@@ -70,7 +70,7 @@ export default function Subscribe() {
           />
           <button
             type="submit"
-            className="text-xs md:text-sm px-6 py-2 bg-back-ground font-semibold rounded-r-lg text-hitam-judul-body"
+            className="text-xs md:text-sm px-6 py-2 bg-back-ground font-semibold rounded-r-lg text-hitam-judul-body cursor-pointer"
             disabled={loading}>
             {loading ? "Subscribing..." : "Subscribe"}
           </button>

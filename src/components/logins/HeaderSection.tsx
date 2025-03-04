@@ -3,7 +3,7 @@
 // External libraries
 import Image from "next/image";
 import Link from "next/link";
-import { FaWallet } from "react-icons/fa6";
+import { FaUserLarge, FaWallet } from "react-icons/fa6";
 
 // Components libraries
 import ConnectButtons from "./ConnectButtons";
@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <header className="w-full flex items-center justify-between bg-back-ground md:px-20 py-4 px-4">
       {/* Logo Section */}
-      <div className="md:w-1/12 sm:w-1/6 w-1/4 flex justify-start">
+      <div className="md:w-1/12 sm:w-1/6 w-1/4 flex justify-start cursor-pointer">
         <Link href="/">
           <Image
             src="/images/ramadhan-login-06.png"
@@ -28,7 +28,14 @@ export default function Header() {
         <div className="flex space-x-4">
           <ConnectButtons />
           <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
-            <FaWallet />
+            <Link href="/user">
+              <FaUserLarge />
+            </Link>
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
+            <Link href="/wallet">
+              <FaWallet />
+            </Link>
           </button>
         </div>
       </div>

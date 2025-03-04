@@ -88,13 +88,15 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Logo & Powered By (Right on lg, Center on md) */}
-        <div className="w-full flex justify-center sm:justify-end">
-          <Image
-            src="/images/ramadhan-login-16.png"
-            alt="Logo Kolaborasi Istiqlal Global Fund dan Voyage."
-            width={477}
-            height={143}
-          />
+        <div className="w-full flex justify-center sm:justify-end cursor-pointer">
+          <Link href="https://www.voyage.co.id/" target="_blank">
+            <Image
+              src="/images/ramadhan-login-16.png"
+              alt="Logo Kolaborasi Istiqlal Global Fund dan Voyage."
+              width={477}
+              height={143}
+            />
+          </Link>
         </div>
       </div>
     </footer>

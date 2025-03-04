@@ -44,13 +44,21 @@ const ConnectButtons: React.FC = () => {
         }}
         chains={chains}
         client={client}
+        connectButton={{
+          label: "Log In",
+          style: {
+            height: "40px",
+            background: "#f0f0f0",
+            color: "#707070",
+          },
+        }}
         connectModal={{
           privacyPolicyUrl: "/terms",
           showThirdwebBranding: false,
           size: "compact",
           termsOfServiceUrl: "/terms",
           title: "Silahkan Log In!",
-          titleIcon: "https://ramadhan.voyage.co.id/logos/oslo.png;",
+          titleIcon: "https://ramadhan.voyage.co.id/logos/voyage.png",
         }}
         detailsButton={{
           displayBalanceToken,
