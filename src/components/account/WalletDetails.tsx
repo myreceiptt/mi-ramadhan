@@ -3,19 +3,16 @@
 "use client";
 
 // External libraries
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import React, { useState } from "react";
+// import { getContract } from "thirdweb";
 import {
-  balanceOf as balanceOfERC1155,
-  getActiveClaimCondition as claimCondition1155,
-  getNFT,
+  balanceOfBatch as balanceOfBatchERC1155,
+  getNFTs,
 } from "thirdweb/extensions/erc1155";
+
 import {
-  balanceOf as balanceOfERC20,
-  canClaim as claimCondition20,
-} from "thirdweb/extensions/erc20";
-import {
-  ClaimButton,
   MediaRenderer,
   useActiveAccount,
   useReadContract,
@@ -23,343 +20,176 @@ import {
 
 // Blockchain configurations
 import { client } from "@/config/client";
-import { kuponRamadhan, p0inIstiqlal } from "@/config/contracts";
+import { kuponRamadhan } from "@/config/contracts";
+import Link from "next/link";
 
-const WalletDetails: React.FC = () => {
-  // Ensure state variables are properly declared
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [erc1155Claimed, setErc1155Claimed] = useState(true);
-  const [quantityLimitPerWallet, setQuantityLimitPerWallet] = useState(
-    BigInt(0)
-  );
-  const [erc20Claimed, setErc20Claimed] = useState(true);
-  const [pesanTunggu, setPesanTunggu] = useState<string | null>(null);
-  const [pesanKirim, setPesanKirim] = useState<string | null>(null);
-  const [pesanSukses, setPesanSukses] = useState<string | null>(null);
-  const [pesanGagal, setPesanGagal] = useState<string | null>(null);
-
+export default function WalletDetails() {
   const activeAccount = useActiveAccount();
 
-  // Generate token ID dynamically based on the current date
-  const getTokenId = () => {
-    const startDate = new Date(Date.UTC(2025, 2, 1)); // 1 Maret 2025, UTC
-    // const startDate = new Date(Date.UTC(2025, 1, 28)); // 28 Februari 2025, UTC
+  // const tokenIds = Array.from({ length: 31 }, (_, i) => BigInt(i));
+  // const owners = Array(tokenIds.length).fill(activeAccount?.address ?? "");
 
-    // Ambil waktu saat ini dalam zona waktu Indonesia (GMT+7)
-    const now = new Date();
-    const jakartaOffset = 7 * 60 * 60 * 1000; // 7 jam dalam milidetik
-    const todayJakarta = new Date(now.getTime() + jakartaOffset);
+  // const contract = getContract({
+  //   client,
+  //   chain: kuponRamadhan.chain,
+  //   address: kuponRamadhan.address,
+  // });
 
-    // Hitung selisih hari berdasarkan GMT+7
-    const differenceInDays = Math.floor(
-      (todayJakarta.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
+  // State for modal
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-    return differenceInDays + 1; // Start from token ID 1
-  };
-
-  const currentTokenId = useState(getTokenId())[0];
-  const tokenIdBigInt = BigInt(currentTokenId);
-
-  // Fetch ERC1155 Claim Condition (to get `quantityLimitPerWallet`)
-  useEffect(() => {
-    async function fetchClaimCondition1155() {
-      try {
-        const activeCondition1155 = await claimCondition1155({
-          contract: kuponRamadhan,
-          tokenId: tokenIdBigInt,
-        });
-
-        console.log("ERC1155 Claim Condition:", activeCondition1155);
-
-        setQuantityLimitPerWallet(activeCondition1155.quantityLimitPerWallet);
-      } catch (error) {
-        console.error("Error fetching claim condition:", error);
-      }
-    }
-
-    fetchClaimCondition1155();
-  }, [tokenIdBigInt]);
-
-  // Fetch user's ERC1155 NFT Balance
-  const { data: ownedNfts } = useReadContract(balanceOfERC1155, {
+  // Ambil balance NFT yang dimiliki user
+  const { data: ownedNfts } = useReadContract(balanceOfBatchERC1155, {
     contract: kuponRamadhan,
-    owner: activeAccount?.address ?? "",
-    tokenId: tokenIdBigInt,
+    owners: Array(31).fill(activeAccount?.address ?? ""),
+    tokenIds: Array.from({ length: 31 }, (_, i) => BigInt(i)),
   });
 
-  // Check if the user has reached the claim limit
-  useEffect(() => {
-    if (ownedNfts !== undefined && quantityLimitPerWallet !== BigInt(0)) {
-      if (BigInt(ownedNfts) >= quantityLimitPerWallet) {
-        setErc1155Claimed(true);
-      } else {
-        setErc1155Claimed(false);
-      }
-    }
-  }, [ownedNfts, quantityLimitPerWallet]);
-
-  // Fetch NFT metadata
-  const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
+  // Ambil metadata untuk semua NFT
+  const { data: nfts } = useReadContract(getNFTs, {
     contract: kuponRamadhan,
-    tokenId: tokenIdBigInt,
+    start: 0,
+    count: 31,
   });
-
-  // Fetch ERC20 Claim Condition (to get `result`)
-  useEffect(() => {
-    async function fetchClaimCondition20() {
-      try {
-        const activeCondition20 = await claimCondition20({
-          contract: p0inIstiqlal,
-          claimer: activeAccount?.address ?? "",
-          quantity: "1",
-        });
-
-        console.log("ERC20 Claim Condition:", activeCondition20);
-        console.log("Active Account:", activeAccount?.address);
-
-        if (!activeCondition20.result) {
-          setErc20Claimed(true);
-        } else {
-          setErc20Claimed(false);
-        }
-      } catch (error) {
-        console.error("Error fetching claim condition:", error);
-      }
-    }
-
-    fetchClaimCondition20();
-  }, [activeAccount?.address]);
-
-  // Fetch user's ERC20 Token Balance
-  const { data: poinBalance } = useReadContract(balanceOfERC20, {
-    contract: p0inIstiqlal,
-    address: activeAccount?.address ?? "",
-  });
-
-  // Ensure currentTokenId exists, otherwise show this "Memuat..." message.
-  if (!currentTokenId || isNftLoading) {
-    return (
-      <main className="grid gap-4 place-items-center">
-        <h2 className="text-left text-sm font-medium text-icon-wording">
-          Memuat...
-        </h2>
-      </main>
-    );
-  }
 
   return (
     <main className="grid gap-4 place-items-center">
-      <div className="w-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 lg:gap-12 items-start">
-        {/* MediaRenderer (Left Column) */}
-        <div className="rounded-3xl overflow-hidden w-full">
-          {nft ? (
-            <MediaRenderer
-              client={client}
-              src={nft?.metadata?.image || "/images/ramadhan-login-09.png"}
-              alt={
-                nft?.metadata?.name ? `${nft.metadata.name} NFT` : "NFT Image"
+      {ownedNfts?.some((balance) => balance > 0n) ? (
+        <>
+          <div className="w-full flex flex-col gap-2 sm:items-start items-center px-0 sm:px-4">
+            <h1 className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-hitam-judul-body">
+              Kupon Digital &
+            </h1>
+            <h2 className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-hitam-judul-body">
+              Istiqlal Poin Anda
+            </h2>
+          </div>
+
+          {/* NFT List Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {ownedNfts?.map((balance, index) => {
+              if (balance > 0n) {
+                const nft = nfts?.[index];
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}>
+                    <div className="w-full grid grid-cols-1 gap-4 p-4 border border-solid border-border-tombol rounded-3xl">
+                      {nft ? (
+                        <>
+                          <button
+                            onClick={() =>
+                              setSelectedImage(nft.metadata.image ?? null)
+                            }>
+                            <MediaRenderer
+                              client={client}
+                              src={
+                                nft.metadata.image ||
+                                "/images/ramadhan-login-09.png"
+                              }
+                              alt={
+                                nft.metadata.name
+                                  ? `Kupon ${nft.metadata.name}`
+                                  : "Kupon Digital"
+                              }
+                              className="rounded-lg w-full cursor-pointer"
+                            />
+                          </button>
+                          <div className="grid grid-cols-1 gap-2">
+                            <h2 className="text-left text-base font-semibold text-hitam-judul-body">
+                              Kupon {balance.toString()} Edisi
+                            </h2>
+                            <h2 className="text-left text-sm font-medium text-icon-wording">
+                              {nft?.metadata?.name || "Digital"}
+                            </h2>
+                          </div>
+                        </>
+                      ) : (
+                        <h2 className="text-left text-sm font-medium text-icon-wording">
+                          Tidak ada data tersedia.
+                        </h2>
+                      )}
+                    </div>
+                  </motion.div>
+                );
               }
-              className="rounded-3xl w-full"
+              return null;
+            })}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Top Section - Content Box */}
+          <div className="w-full flex flex-col gap-2 items-center justify-center text-center px-0 sm:px-4">
+            <h2 className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal text-hitam-judul-body">
+              Kupon Digital & Istiqlal Poin
+            </h2>
+            <h3 className="text-center text-sm font-medium text-icon-wording">
+              Saat ini Anda belum memiliki Kupon Digital & Istiqlal Poin.
+              Dapatkan Kupon Digital & Istiqlal Poin sekarang secara GRATIS dan
+              tukarkan dengan kejutan menarik.
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 mt-2 md:mt-4 mb-4 md:mb-8 lg:mb-12">
+            {/* Home Page Button */}
+            <Link href="/">
+              <button
+                type="button"
+                className="rounded-lg py-4 px-12 text-back-ground bg-hitam-judul-body text-base font-semibold cursor-pointer">
+                Klaim Kupon & Poin
+              </button>
+            </Link>
+          </div>
+
+          {/* Bottom Section - Background Image */}
+          <div className="bottom-0 left-0 w-full h-full">
+            <Image
+              src="/images/bukhari-fa-login-02-12.png"
+              alt="Background Image"
+              width={1430}
+              height={541}
+              objectFit="cover"
+              objectPosition="top"
+              priority
             />
-          ) : (
-            <h2 className="text-left text-sm font-medium text-icon-wording">
-              Tidak ada data tersedia.
-            </h2>
-          )}
-        </div>
-
-        {/* Right Column: Form */}
-        <div className="flex flex-col gap-2 lg:gap-4 items-start justify-center h-full">
-          {/* Title */}
-          <h1 className="text-left xl:text-6xl lg:text-5xl md:text-4xl text-3xl font-normal text-hitam-judul-body tracking-tight justify-start align-middle leading-tight">
-            Dapatkan Kupon Digital & Istiqlal Poin Gratis!
-          </h1>
-
-          {/* Provider or Creator */}
-          <div className="flex flex-row gap-2">
-            <h1 className="text-left text-sm font-medium text-icon-wording">
-              oleh
-            </h1>
-            <span className="text-3xl leading-6 text-icon-wording">
-              &#9673;
-            </span>
-            <h1 className="text-left text-sm font-medium text-icon-wording">
-              <Link href="https://igf.or.id/" target="_blank">
-                Masjid Istiqlal
-              </Link>
-            </h1>
           </div>
+        </>
+      )}
 
-          {/* Description with Expand/Collapse */}
-          <h2 className="text-left text-sm font-normal text-icon-wording">
-            Berkah Ramadhan sudah menanti! Dapatkan Kupon Digital & Istiqlal
-            Poin sekarang secara GRATIS dan tukarkan dengan kejutan menarik.
-            Semakin banyak poin yang Anda kumpulkan, semakin besar hadiah yang
-            bisa Anda dapatkan! Jangan lewatkan kesempatan emas ini!
-          </h2>
-
-          {/* Success or Error Messages */}
-          {pesanTunggu && (
-            <h4 className="text-left text-sm font-semibold text-footer-coklat">
-              {pesanTunggu}
-            </h4>
-          )}
-          {pesanKirim && (
-            <h4 className="text-left text-sm font-semibold text-footer-coklat">
-              {pesanKirim}
-            </h4>
-          )}
-          {pesanSukses && (
-            <h4 className="text-left text-sm font-semibold text-footer-coklat">
-              {pesanSukses}
-            </h4>
-          )}
-          {pesanGagal && (
-            <h4 className="text-left text-sm font-semibold text-footer-coklat">
-              {pesanGagal}
-            </h4>
-          )}
-
-          {/* Tokens Info */}
-          <div className="w-full grid grid-cols-2 gap-2">
-            <h2 className="text-left text-sm font-medium text-icon-wording">
-              Kupon Anda Hari Ini
-            </h2>
-            <h2 className="text-left text-sm font-medium text-icon-wording">
-              Total Poin Anda
-            </h2>
-
-            <h2 className="text-left xl:text-3xl lg:text-2xl md:text-xl text-lg font-semibold text-hitam-judul-body">
-              {ownedNfts?.toString() ?? "0"}
-            </h2>
-            <h2 className="text-left xl:text-3xl lg:text-2xl md:text-xl text-lg font-semibold text-hitam-judul-body">
-              {(BigInt(poinBalance ?? "0") / BigInt(1e18)).toString()}
-            </h2>
-          </div>
-
-          <div className="w-full flex sm:flex-row flex-col gap-2">
-            {/* Claim Button ERC1155 */}
-            <ClaimButton
-              unstyled
-              className={`w-full rounded-lg p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
-                ${
-                  isProcessing || erc1155Claimed
-                    ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
-                    : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
-                }
-            `}
-              contractAddress={kuponRamadhan.address}
-              chain={kuponRamadhan.chain}
-              client={client}
-              claimParams={{
-                type: "ERC1155",
-                quantity: 1n,
-                tokenId: tokenIdBigInt,
-              }}
-              disabled={Boolean(isProcessing || erc1155Claimed)}
-              onClick={() => {
-                setIsProcessing(true);
-                setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
-                // setPesanKirim(null);
-                setPesanSukses(null);
-                setPesanGagal(null);
-                // setErc1155Claimed(false);
-              }}
-              onTransactionSent={() => {
-                // setIsProcessing(true);
-                setPesanTunggu(null);
-                setPesanKirim("Kupon sedang diklaim.");
-                // setPesanSukses(null);
-                // setPesanGagal(null);
-                // setErc1155Claimed(false);
-              }}
-              onError={(error) => {
-                setIsProcessing(false);
-                setPesanTunggu(null);
-                setPesanKirim(null);
-                // setPesanSukses(null);
-                setPesanGagal(`${error.message}`);
-                // setErc1155Claimed(false);
-              }}
-              onTransactionConfirmed={async () => {
-                setIsProcessing(false);
-                // setPesanTunggu(null);
-                setPesanKirim(null);
-                setPesanSukses("Alhamdulillah! Kupon berhasil diklaim.");
-                // setPesanGagal(null);
-                setErc1155Claimed(true);
-              }}>
-              {erc1155Claimed ? "Klaim Lagi Besok" : "Klaim Kupon Sekarang"}
-            </ClaimButton>
-
-            {/* Claim Button ERC20 */}
-            <ClaimButton
-              unstyled
-              className={`w-full rounded-lg p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
-                ${
-                  isProcessing || erc20Claimed
-                    ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
-                    : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
-                }
-            `}
-              contractAddress={p0inIstiqlal.address}
-              chain={p0inIstiqlal.chain}
-              client={client}
-              claimParams={{
-                type: "ERC20",
-                quantity: "786",
-              }}
-              disabled={Boolean(isProcessing || erc20Claimed)}
-              onClick={() => {
-                setIsProcessing(true);
-                setPesanTunggu("Bismillah! Mohon sabar dan tunggu.");
-                // setPesanKirim(null);
-                setPesanSukses(null);
-                setPesanGagal(null);
-                // setErc20Claimed(false);
-              }}
-              onTransactionSent={() => {
-                // setIsProcessing(true);
-                setPesanTunggu(null);
-                setPesanKirim("Poin sedang diklaim.");
-                // setPesanSukses(null);
-                // setPesanGagal(null);
-                // setErc20Claimed(false);
-              }}
-              onError={(error) => {
-                setIsProcessing(false);
-                setPesanTunggu(null);
-                setPesanKirim(null);
-                // setPesanSukses(null);
-                setPesanGagal(`${error.message}`);
-                // setErc20Claimed(false);
-              }}
-              onTransactionConfirmed={() => {
-                setIsProcessing(false);
-                // setPesanTunggu(null);
-                setPesanKirim(null);
-                setPesanSukses("Alhamdulillah! Poin berhasil diklaim.");
-                // setPesanGagal(null);
-                setErc20Claimed(true);
-              }}>
-              {erc20Claimed ? "Klaim Lagi Besok" : "Klaim Poin Sekarang"}
-            </ClaimButton>
-          </div>
-
-          {/* Note for users. */}
-          <div className="flex flex-col gap-0">
-            <h4 className="text-left text-xs font-normal text-icon-wording">
-              &#42;Kupon {nft?.metadata.name || "Tanggal Kupon Digital"}
-            </h4>
-            <h4 className="text-left text-xs font-normal text-icon-wording">
-              &#42;Hanya bisa diklaim satu kali per hari.
-            </h4>
-          </div>
-        </div>
-      </div>
+      {/* Modal for Image Preview */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center bg-back-ground/50 z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedImage(null)}>
+            <motion.div
+              className="relative"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              transition={{ duration: 0.3 }}>
+              {/* <button
+                className="absolute top-2 right-2 text-hitam-judul-body text-2xl"
+                onClick={() => setSelectedImage(null)}>
+                &times;
+              </button> */}
+              <MediaRenderer
+                client={client}
+                src={selectedImage || "/images/ramadhan-login-09.png"}
+                width="1080"
+                height="1080"
+                alt={`Kupon Puasa Ramadhan Milik Anda`}
+                className="rounded-lg w-full max-h-[90vh]"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
-};
-
-export default WalletDetails;
+}

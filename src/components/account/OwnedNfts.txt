@@ -1,6 +1,6 @@
 // /src/components/account/OwnedNfts.tsx
 
-"use client";
+
 
 import React from "react";
 import { getContract } from "thirdweb";
