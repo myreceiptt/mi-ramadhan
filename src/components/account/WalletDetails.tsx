@@ -66,7 +66,7 @@ export default function WalletDetails() {
           </div>
 
           {/* NFT List Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-6 grid-cols-2 gap-4">
             {ownedNfts?.map((balance, index) => {
               if (balance > 0n) {
                 const nft = nfts?.[index];
@@ -98,10 +98,10 @@ export default function WalletDetails() {
                             />
                           </button>
                           <div className="grid grid-cols-1 gap-2">
-                            <h2 className="text-left text-base font-semibold text-hitam-judul-body">
+                            <h2 className="text-left text-sm font-semibold text-hitam-judul-body">
                               Kupon {balance.toString()} Edisi
                             </h2>
-                            <h2 className="text-left text-sm font-medium text-icon-wording">
+                            <h2 className="text-left text-xs font-medium text-icon-wording">
                               {nft?.metadata?.name || "Digital"}
                             </h2>
                           </div>
