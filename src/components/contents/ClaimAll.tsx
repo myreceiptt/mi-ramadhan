@@ -152,7 +152,7 @@ const ClaimAll: React.FC = () => {
     <main className="grid gap-4 place-items-center">
       <div className="w-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 lg:gap-12 items-start">
         {/* MediaRenderer (Left Column) */}
-        <div className="rounded-3xl overflow-hidden w-full">
+        <div className="rounded-xl sm:rounded-3xl md:rounded-2xl lg:rounded-3xl overflow-hidden w-full">
           {nft ? (
             <MediaRenderer
               client={client}
@@ -160,7 +160,7 @@ const ClaimAll: React.FC = () => {
               alt={
                 nft?.metadata?.name ? `${nft.metadata.name} NFT` : "NFT Image"
               }
-              className="rounded-3xl w-full"
+              className="rounded-xl sm:rounded-3xl md:rounded-2xl lg:rounded-3xl w-full"
             />
           ) : (
             <h2 className="text-left text-sm font-medium text-icon-wording">

@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <header className="w-full flex items-center justify-between bg-back-ground md:px-20 py-4 px-4">
       {/* Logo Section */}
-      <div className="md:w-1/12 sm:w-1/6 w-1/4 flex justify-start cursor-pointer">
+      <div className="lg:w-1/6 md:w-1/5 sm:w-1/6 w-1/4 flex justify-start cursor-pointer">
         <Link href="/">
           <Image
             src="/images/ramadhan-login-06.png"
