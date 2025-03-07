@@ -6,39 +6,37 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 // Image configurations
-import art11 from "../../../public/images/ramadhan-login-11.png";
+// import art11 from "../../../public/images/ramadhan-login-11.png";
 import art12 from "../../../public/images/ramadhan-login-12.png";
-import art13 from "../../../public/images/ramadhan-login-13.png";
+// import art13 from "../../../public/images/ramadhan-login-13.png";
 import art14 from "../../../public/images/ramadhan-login-14.png";
 import art15 from "../../../public/images/ramadhan-login-15.png";
 import logo from "../../../public/images/ramadhan-login-06.png";
 import supported from "../../../public/images/ramadhan-login-18.png";
 import powered from "../../../public/images/ramadhan-login-19.png";
 
-// Array of images
-const artImages = [
-  { src: art11, alt: "Sambut Ramadhan dengan Kejutan Spesial!" },
-  { src: art12, alt: "Sambut Ramadhan di Masjid Istiqlal" },
-  { src: art13, alt: "Ramadhan Kareem with Istiqlal Mosque" },
-  { src: art14, alt: "Ramadhan Mubarak in Traditional Style" },
-  { src: art15, alt: "Celebrate Ramadhan with Unity" },
-];
-
 const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [randomArt, setRandomArt] = useState(artImages[0]); // Default image
+  const [selectedArt, setSelectedArt] = useState(art12); // Default image
 
   useEffect(() => {
-    // Select a random image on each page load
-    const randomIndex = Math.floor(Math.random() * artImages.length);
-    setRandomArt(artImages[randomIndex]);
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+      // const subdomain = hostname.split(".")[0]; // Ambil subdomain pertama
+
+      if (hostname === "brands.istiqlal.or.id") {
+        setSelectedArt(art14);
+      } else if (hostname === "leminerale.istiqlal.or.id") {
+        setSelectedArt(art15);
+      }
+    }
   }, []);
 
   return (
     <div className="w-full h-screen grid md:grid-cols-2 grid-cols-1">
       <div className="w-full relative hidden md:block overflow-hidden">
         <Image
-          src={randomArt.src}
-          alt={randomArt.alt}
+          src={selectedArt}
+          alt="Sambut Ramadhan di Masjid Istiqlal"
           width={1845}
           height={1920}
           className="absolute inset-0 w-full h-full object-cover object-right"
@@ -71,7 +69,10 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="w-full h-auto flex flex-col justify-start items-start">
           <h4 className="text-left text-xs font-normal text-icon-wording">
             Dengan melanjutkan, Anda setuju dengan{" "}
-            <Link href="/terms" target="_blank" className="text-hitam-judul-body">
+            <Link
+              href="/terms"
+              target="_blank"
+              className="text-hitam-judul-body">
               Syarat & Ketentuan serta Kebijakan Privasi.
             </Link>
           </h4>
