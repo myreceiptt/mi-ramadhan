@@ -1,14 +1,14 @@
 // /src/components/logins/LoginLayout.tsx
 
 // External libraries
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 // Image configurations
-// import art11 from "../../../public/images/ramadhan-login-11.png";
+import art11 from "../../../public/images/ramadhan-login-11.png";
 import art12 from "../../../public/images/ramadhan-login-12.png";
-// import art13 from "../../../public/images/ramadhan-login-13.png";
+import art13 from "../../../public/images/ramadhan-login-13.png";
 import art14 from "../../../public/images/ramadhan-login-14.png";
 import art15 from "../../../public/images/ramadhan-login-15.png";
 import logo from "../../../public/images/ramadhan-login-06.png";
@@ -16,18 +16,24 @@ import supported from "../../../public/images/ramadhan-login-18.png";
 import powered from "../../../public/images/ramadhan-login-19.png";
 
 const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [selectedArt, setSelectedArt] = useState(art12); // Default image
+  const [selectedArt, setSelectedArt] = useState<StaticImageData>(art12); // Default image
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
-      // const subdomain = hostname.split(".")[0]; // Ambil subdomain pertama
+      const subdomain = hostname.split(".")[0]; // Ambil subdomain pertama
 
-      if (hostname === "brands.istiqlal.or.id") {
-        setSelectedArt(art14);
-      } else if (hostname === "leminerale.istiqlal.or.id") {
-        setSelectedArt(art15);
-      }
+      // Mapping subdomain ke gambar tertentu
+      const subdomainImages: Record<string, StaticImageData> = {
+        nota: art11,
+        login: art12, // Default
+        voyage: art13,
+        brands: art14,
+        leminerale: art15,
+      };
+
+      // Set gambar berdasarkan subdomain, jika tidak ada pakai default (art12)
+      setSelectedArt(subdomainImages[subdomain] || art12);
     }
   }, []);
 
