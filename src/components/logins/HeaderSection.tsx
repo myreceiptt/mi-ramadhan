@@ -3,10 +3,10 @@
 // External libraries
 import Image from "next/image";
 import Link from "next/link";
-import { FaUserLarge, FaWallet } from "react-icons/fa6";
+import { FaClockRotateLeft, FaUserLarge, FaWallet } from "react-icons/fa6";
 
 // Components libraries
-import ConnectButtons from "./ConnectButtons";
+// import ConnectButtons from "./ConnectButtons";
 
 export default function Header() {
   return (
@@ -26,7 +26,7 @@ export default function Header() {
       <div className="w-1/2 flex justify-end gap-4">
         {/* Icons Section */}
         <div className="flex space-x-4">
-          <ConnectButtons />
+          {/* <ConnectButtons /> */}
           <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
             <Link href="/user">
               <FaUserLarge />
@@ -35,6 +35,11 @@ export default function Header() {
           <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
             <Link href="/wallet">
               <FaWallet />
+            </Link>
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
+            <Link href="/riwayat">
+              <FaClockRotateLeft />
             </Link>
           </button>
         </div>

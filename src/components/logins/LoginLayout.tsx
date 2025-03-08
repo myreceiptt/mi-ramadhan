@@ -25,11 +25,11 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       // Mapping subdomain ke gambar tertentu
       const subdomainImages: Record<string, StaticImageData> = {
-        nota: art11,
         login: art12, // Default
-        voyage: art13,
         brands: art14,
         leminerale: art15,
+        nota: art11,
+        voyage: art13,
       };
 
       // Set gambar berdasarkan subdomain, jika tidak ada pakai default (art12)
