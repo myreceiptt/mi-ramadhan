@@ -24,6 +24,9 @@ import {
 import { client } from "@/config/client";
 import { kuponRamadhan } from "@/config/contracts";
 
+// Component libraries
+import TransferButton from "./TransferButton";
+
 // Define correct type for TransferSingle event arguments
 type TransferSingleEventArgs = {
   _operator: string;
@@ -41,6 +44,7 @@ export default function WalletDetails() {
 
   // State for modal
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedTokenId, setSelectedTokenId] = useState<bigint | null>(null);
 
   // Tabs const
   const [activeTab, setActiveTab] = useState("tab1");
@@ -73,6 +77,7 @@ export default function WalletDetails() {
             }),
           ],
         });
+        console.error("Fetched transfer events:", events);
 
         setTransferEvents(events);
       } catch (error) {
@@ -132,9 +137,10 @@ export default function WalletDetails() {
                           {nft ? (
                             <>
                               <button
-                                onClick={() =>
-                                  setSelectedImage(nft.metadata.image ?? null)
-                                }>
+                                onClick={() => {
+                                  setSelectedImage(nft.metadata.image ?? null);
+                                  setSelectedTokenId(nft.id);
+                                }}>
                                 <MediaRenderer
                                   client={client}
                                   src={
@@ -163,8 +169,11 @@ export default function WalletDetails() {
                                     }
                                   </>
                                 ) : (
-                                  "Tidak ada atribut tersedia."
+                                  `Tidak ada atribut tersedia untuk ${nft.id}`
                                 )}
+                              </h2>
+                              <h2 className="text-center text-xs font-semibold text-icon-wording">
+                                {balance.toString()} Kupon
                               </h2>
                             </>
                           ) : (
@@ -218,28 +227,48 @@ export default function WalletDetails() {
 
           {/* Modal for Image Preview */}
           <AnimatePresence>
-            {selectedImage && (
+            {selectedImage && selectedTokenId && (
               <motion.div
                 className="fixed inset-0 flex items-center justify-center bg-back-ground/50 z-50"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={() => setSelectedImage(null)}>
-                <motion.div
-                  className="relative"
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0.8 }}
-                  transition={{ duration: 0.3 }}>
-                  <MediaRenderer
-                    client={client}
-                    src={selectedImage || "/images/ramadhan-login-09.png"}
-                    width="640"
-                    height="640"
-                    alt={`Kupon Puasa Ramadhan Milik Anda`}
-                    className="rounded-xl max-w-[90vw] max-h-[90vh]"
-                  />
-                </motion.div>
+                onClick={() => {
+                  setSelectedImage(null);
+                  setSelectedTokenId(null);
+                }}>
+                <div className="flex flex-col gap-2 lg:gap-4 items-start justify-center h-full">
+                  <motion.div
+                    className="relative flex flex-col items-center gap-2 p-2 bg-back-ground border border-solid border-border-tombol rounded-lg"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0.8 }}
+                    transition={{ duration: 0.3 }}
+                    onClick={(e) => e.stopPropagation()}>
+                    <MediaRenderer
+                      client={client}
+                      src={selectedImage || "/images/ramadhan-login-09.png"}
+                      width="640"
+                      height="640"
+                      alt={`Kupon Puasa Ramadhan Milik Anda`}
+                      className="rounded-xl max-w-[90vw] max-h-[90vh]"
+                    />
+                    <div className="w-full flex sm:flex-row flex-col gap-2">
+                      <TransferButton
+                        tokenId={selectedTokenId}
+                        recipientAddress="0x13a91533cE8cc57F05EdE4716C32C8B51800E599" // BON VOYAGE Address
+                      />
+                      <button
+                        onClick={() => {
+                          setSelectedImage(null);
+                          setSelectedTokenId(null);
+                        }}
+                        className="w-full rounded-full p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer">
+                        Tutup Kupon
+                      </button>
+                    </div>
+                  </motion.div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

@@ -242,7 +242,7 @@ const ClaimAll: React.FC = () => {
             {/* Claim Button ERC1155 */}
             <ClaimButton
               unstyled
-              className={`w-full rounded-lg p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
+              className={`w-full rounded-full p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
                 ${
                   isProcessing || erc1155Claimed
                     ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
@@ -296,7 +296,7 @@ const ClaimAll: React.FC = () => {
             {/* Claim Button ERC20 */}
             <ClaimButton
               unstyled
-              className={`w-full rounded-lg p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
+              className={`w-full rounded-full p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
                 ${
                   isProcessing || erc20Claimed
                     ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"

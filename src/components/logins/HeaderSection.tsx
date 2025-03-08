@@ -3,10 +3,7 @@
 // External libraries
 import Image from "next/image";
 import Link from "next/link";
-import { FaClockRotateLeft, FaUserLarge, FaWallet } from "react-icons/fa6";
-
-// Components libraries
-// import ConnectButtons from "./ConnectButtons";
+import { FaClockRotateLeft, FaMosque, FaUser, FaWallet } from "react-icons/fa6";
 
 export default function Header() {
   return (
@@ -26,19 +23,23 @@ export default function Header() {
       <div className="w-1/2 flex justify-end gap-4">
         {/* Icons Section */}
         <div className="flex space-x-4">
-          {/* <ConnectButtons /> */}
-          <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
-            <Link href="/user">
-              <FaUserLarge />
+          <button className="sm:w-10 w-8 sm:h-10 h-8 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
+            <Link href="/">
+              <FaMosque />
             </Link>
           </button>
-          <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
+          <button className="sm:w-10 w-8 sm:h-10 h-8 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
+            <Link href="/user">
+              <FaUser />
+            </Link>
+          </button>
+          <button className="sm:w-10 w-8 sm:h-10 h-8 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
             <Link href="/wallet">
               <FaWallet />
             </Link>
           </button>
-          <button className="w-10 h-10 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
-            <Link href="/riwayat">
+          <button className="sm:w-10 w-8 sm:h-10 h-8 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
+            <Link href="/records">
               <FaClockRotateLeft />
             </Link>
           </button>
