@@ -7,7 +7,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import {
   balanceOf as balanceOfERC1155,
-  getActiveClaimCondition as claimCondition1155,
+  canClaim,
   getNFT,
 } from "thirdweb/extensions/erc1155";
 import {
@@ -29,9 +29,6 @@ const ClaimAll: React.FC = () => {
   // Ensure state variables are properly declared
   const [isProcessing, setIsProcessing] = useState(false);
   const [erc1155Claimed, setErc1155Claimed] = useState(true);
-  const [quantityLimitPerWallet, setQuantityLimitPerWallet] = useState(
-    BigInt(0)
-  );
   const [erc20Claimed, setErc20Claimed] = useState(true);
   const [pesanTunggu, setPesanTunggu] = useState<string | null>(null);
   const [pesanKirim, setPesanKirim] = useState<string | null>(null);
@@ -61,25 +58,31 @@ const ClaimAll: React.FC = () => {
   const currentTokenId = useState(getTokenId())[0];
   const tokenIdBigInt = BigInt(currentTokenId);
 
-  // Fetch ERC1155 Claim Condition (to get `quantityLimitPerWallet`)
+  // Fetch Claimability using "canClaim"
   useEffect(() => {
-    async function fetchClaimCondition1155() {
+    async function checkClaimability() {
+      if (!activeAccount?.address || !tokenIdBigInt) return;
+
       try {
-        const activeCondition1155 = await claimCondition1155({
+        const canClaimResult = await canClaim({
           contract: kuponRamadhan,
           tokenId: tokenIdBigInt,
+          quantity: tokenIdBigInt,
+          claimer: activeAccount?.address,
         });
 
-        console.log("ERC1155 Claim Condition:", activeCondition1155);
+        console.log("Can Claim Result:", canClaimResult);
 
-        setQuantityLimitPerWallet(activeCondition1155.quantityLimitPerWallet);
+        // Check if the user can claim or not,
+        setErc1155Claimed(!canClaimResult.result);
       } catch (error) {
-        console.error("Error fetching claim condition:", error);
+        console.error("Error:", error);
+        setErc1155Claimed(true); // Assume claimed (can't claim) if an error occurs
       }
     }
 
-    fetchClaimCondition1155();
-  }, [tokenIdBigInt]);
+    checkClaimability();
+  }, [activeAccount?.address, tokenIdBigInt]);
 
   // Fetch user's ERC1155 NFT Balance
   const { data: ownedNfts } = useReadContract(balanceOfERC1155, {
@@ -87,17 +90,6 @@ const ClaimAll: React.FC = () => {
     owner: activeAccount?.address ?? "",
     tokenId: tokenIdBigInt,
   });
-
-  // Check if the user has reached the claim limit
-  useEffect(() => {
-    if (ownedNfts !== undefined && quantityLimitPerWallet !== BigInt(0)) {
-      if (BigInt(ownedNfts) >= quantityLimitPerWallet) {
-        setErc1155Claimed(true);
-      } else {
-        setErc1155Claimed(false);
-      }
-    }
-  }, [ownedNfts, quantityLimitPerWallet]);
 
   // Fetch NFT metadata
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {

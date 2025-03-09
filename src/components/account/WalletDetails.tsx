@@ -253,20 +253,10 @@ export default function WalletDetails() {
                       alt={`Kupon Puasa Ramadhan Milik Anda`}
                       className="rounded-xl max-w-[90vw] max-h-[90vh]"
                     />
-                    <div className="w-full flex sm:flex-row flex-col gap-2">
-                      <TransferButton
-                        tokenId={selectedTokenId}
-                        recipientAddress="0x13a91533cE8cc57F05EdE4716C32C8B51800E599" // BON VOYAGE Address
-                      />
-                      <button
-                        onClick={() => {
-                          setSelectedImage(null);
-                          setSelectedTokenId(null);
-                        }}
-                        className="w-full rounded-full p-2 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer">
-                        Tutup Kupon
-                      </button>
-                    </div>
+                    <TransferButton
+                      tokenId={selectedTokenId}
+                      recipientAddress="0x13a91533cE8cc57F05EdE4716C32C8B51800E599" // BON VOYAGE Address
+                    />
                   </motion.div>
                 </div>
               </motion.div>
