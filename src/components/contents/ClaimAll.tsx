@@ -25,6 +25,9 @@ import {
 import { client } from "@/config/client";
 import { kuponRamadhan, p0inIstiqlal } from "@/config/contracts";
 
+// Components libraries
+import Loader from "../contents/ReusableLoader";
+
 const ClaimAll: React.FC = () => {
   // Ensure state variables are properly declared
   const [isProcessing, setIsProcessing] = useState(false);
@@ -67,11 +70,9 @@ const ClaimAll: React.FC = () => {
         const canClaimResult = await canClaim({
           contract: kuponRamadhan,
           tokenId: tokenIdBigInt,
-          quantity: tokenIdBigInt,
+          quantity: 1n,
           claimer: activeAccount?.address,
         });
-
-        console.log("Can Claim Result:", canClaimResult);
 
         // Check if the user can claim or not,
         setErc1155Claimed(!canClaimResult.result);
@@ -107,9 +108,6 @@ const ClaimAll: React.FC = () => {
           quantity: "1",
         });
 
-        console.log("ERC20 Claim Condition:", activeCondition20);
-        console.log("Active Account:", activeAccount?.address);
-
         if (!activeCondition20.result) {
           setErc20Claimed(true);
         } else {
@@ -133,9 +131,7 @@ const ClaimAll: React.FC = () => {
   if (!currentTokenId || isNftLoading) {
     return (
       <main className="grid gap-4 place-items-center">
-        <h2 className="text-left text-sm font-medium text-icon-wording">
-          Memuat...
-        </h2>
+        <Loader message="Memuat..." />
       </main>
     );
   }
@@ -155,9 +151,7 @@ const ClaimAll: React.FC = () => {
               className="rounded-xl sm:rounded-3xl md:rounded-2xl lg:rounded-3xl w-full"
             />
           ) : (
-            <h2 className="text-left text-sm font-medium text-icon-wording">
-              Tidak ada data tersedia.
-            </h2>
+            <Loader message="Tidak ada data tersedia." />
           )}
         </div>
 
@@ -192,26 +186,10 @@ const ClaimAll: React.FC = () => {
           </h2>
 
           {/* Success or Error Messages */}
-          {pesanTunggu && (
-            <h4 className="text-left text-sm font-semibold text-footer-coklat">
-              {pesanTunggu}
-            </h4>
-          )}
-          {pesanKirim && (
-            <h4 className="text-left text-sm font-semibold text-footer-coklat">
-              {pesanKirim}
-            </h4>
-          )}
-          {pesanSukses && (
-            <h4 className="text-left text-sm font-semibold text-footer-coklat">
-              {pesanSukses}
-            </h4>
-          )}
-          {pesanGagal && (
-            <h4 className="text-left text-sm font-semibold text-footer-coklat">
-              {pesanGagal}
-            </h4>
-          )}
+          {pesanTunggu && <Loader message={pesanTunggu} />}
+          {pesanKirim && <Loader message={pesanKirim} />}
+          {pesanSukses && <Loader message={pesanSukses} />}
+          {pesanGagal && <Loader message={pesanGagal} />}
 
           {/* Tokens Info */}
           <div className="w-full grid grid-cols-2 gap-2">

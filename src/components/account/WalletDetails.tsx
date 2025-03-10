@@ -123,7 +123,7 @@ export default function WalletDetails() {
               </h3>
 
               {/* NFT List Grid */}
-              <div className="grid sm:grid-cols-4 grid-cols-2 gap-4 items-center">
+              <div className="grid sm:grid-cols-3 grid-cols-2 gap-4 items-center">
                 {ownedNfts?.map((balance, index) => {
                   if (balance > 0n) {
                     const nft = nfts?.[index];

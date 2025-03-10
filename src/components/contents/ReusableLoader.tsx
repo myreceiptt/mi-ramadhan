@@ -8,7 +8,9 @@ interface LoaderProps {
 }
 
 const Loader: React.FC<LoaderProps> = ({ message }) => (
-  <h2 className="text-left text-sm font-medium text-icon-wording">{message}</h2>
+  <h4 className="text-left text-sm font-semibold text-footer-coklat">
+    {message}
+  </h4>
 );
 
 export default Loader;
