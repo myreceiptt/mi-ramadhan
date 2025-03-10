@@ -90,25 +90,35 @@ export default function WalletDetails() {
 
   return (
     <main className="grid gap-4 place-items-center">
-      <div className="flex gap-4 border-b-2 border-gray-300 w-full justify-center mb-4">
-        <button
-          onClick={() => setActiveTab("tab1")}
-          className={`py-2 px-4 font-semibold ${
-            activeTab === "tab1"
-              ? "border-b-4 border-hitam-judul-body"
-              : "text-gray-500"
-          }`}>
-          Kupon
-        </button>
-        <button
-          onClick={() => setActiveTab("tab2")}
-          className={`py-2 px-4 font-semibold ${
-            activeTab === "tab2"
-              ? "border-b-4 border-hitam-judul-body"
-              : "text-gray-500"
-          }`}>
-          Poin
-        </button>
+      <div className="w-full flex flex-col gap-2 lg:gap-4 sm:items-start items-center">
+        <h1 className="text-left xl:text-6xl lg:text-5xl md:text-4xl text-3xl font-normal text-hitam-judul-body tracking-tight justify-start align-middle leading-tight">
+          Dompet Digital Istiqlal
+        </h1>
+
+        <div className="md:w-1/2 w-full flex sm:flex-row flex-col gap-2">
+          <button
+            onClick={() => setActiveTab("tab1")}
+            className={`w-full rounded-full p-1 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
+              ${
+                activeTab === "tab1"
+                  ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
+                  : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
+              }
+          `}>
+            Kupon
+          </button>
+          <button
+            onClick={() => setActiveTab("tab2")}
+            className={`w-full rounded-full p-1 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out
+              ${
+                activeTab === "tab2"
+                  ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
+                  : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
+              }
+          `}>
+            Poin
+          </button>
+        </div>
       </div>
 
       {activeTab === "tab1" && (

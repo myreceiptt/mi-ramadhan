@@ -91,7 +91,7 @@ const AccountDetails: React.FC = () => {
                   }
                 }}
                 className="w-full rounded-full p-1 sm:text-base text-sm font-semibold transition-colors duration-300 ease-in-out border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer">
-                LOG OUT
+                Keluar Akun
               </button>
             </div>
             <div className="flex flex-col gap-0">
