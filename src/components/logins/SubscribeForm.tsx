@@ -1,5 +1,6 @@
 // /src/components/logins/SubscribeForm.tsx
 
+// External libraries
 import { useState } from "react";
 
 export default function Subscribe() {

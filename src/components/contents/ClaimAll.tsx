@@ -159,7 +159,7 @@ const ClaimAll: React.FC = () => {
         <div className="flex flex-col gap-2 lg:gap-4 items-start justify-center h-full">
           {/* Title */}
           <h1 className="text-left xl:text-6xl lg:text-5xl md:text-4xl text-3xl font-normal text-hitam-judul-body tracking-tight justify-start align-middle leading-tight">
-            Dapatkan Kupon Digital & Istiqlal Poin Gratis!
+            Dapatkan Kartu Kolektibel & Poin Istiqlal Gratis!
           </h1>
 
           {/* Provider or Creator */}
@@ -179,8 +179,8 @@ const ClaimAll: React.FC = () => {
 
           {/* Description with Expand/Collapse */}
           <h2 className="text-left text-sm font-normal text-icon-wording">
-            Berkah Ramadhan sudah menanti! Dapatkan Kupon Digital & Istiqlal
-            Poin sekarang secara GRATIS dan tukarkan dengan kejutan menarik.
+            Berkah Ramadhan sudah menanti! Dapatkan Kartu Kolektibel & Poin
+            Istiqlal sekarang secara GRATIS dan tukarkan dengan kejutan menarik.
             Semakin banyak poin yang Anda kumpulkan, semakin besar hadiah yang
             bisa Anda dapatkan! Jangan lewatkan kesempatan emas ini!
           </h2>
@@ -194,7 +194,7 @@ const ClaimAll: React.FC = () => {
           {/* Tokens Info */}
           <div className="w-full grid grid-cols-2 gap-2">
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Kupon Anda Hari Ini
+              Kartu Anda Hari Ini
             </h2>
             <h2 className="text-left text-sm font-medium text-icon-wording">
               Total Poin Anda
@@ -260,7 +260,7 @@ const ClaimAll: React.FC = () => {
                 // setPesanGagal(null);
                 setErc1155Claimed(true);
               }}>
-              {erc1155Claimed ? "Klaim Lagi Besok" : "Klaim Kupon Sekarang"}
+              {erc1155Claimed ? "Klaim Lagi Besok" : "Klaim Kartu Sekarang"}
             </ClaimButton>
 
             {/* Claim Button ERC20 */}
@@ -320,7 +320,7 @@ const ClaimAll: React.FC = () => {
           {/* Note for users. */}
           <div className="flex flex-col gap-0">
             <h4 className="text-left text-xs font-normal text-icon-wording">
-              &#42;Kupon {nft?.metadata.name || "Tanggal Kupon Digital"}
+              &#42;Kartu {nft?.metadata.name || "Tanggal Kupon Digital"}
             </h4>
             <h4 className="text-left text-xs font-normal text-icon-wording">
               &#42;Hanya bisa diklaim satu kali per hari.

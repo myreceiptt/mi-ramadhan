@@ -11,6 +11,7 @@ type SupportedNFTs = {
 // Define `tekeks` with the proper type
 export const tekeks: SupportedNFTs = {
   [base.id]: [
+    "0xFff11121d7f0e562207acb9Dc340988e077c9240", // Kupon Ramadhan
     "0x1925B991C5e2eC45BA1f34786BAd405d58202140", // MEMORA ONE
   ],
   [baseSepolia.id]: [

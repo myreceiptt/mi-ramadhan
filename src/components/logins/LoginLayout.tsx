@@ -11,20 +11,22 @@ import art12 from "../../../public/images/ramadhan-login-12.png";
 import art13 from "../../../public/images/ramadhan-login-13.png";
 import art14 from "../../../public/images/ramadhan-login-14.png";
 import art15 from "../../../public/images/ramadhan-login-15.png";
-import logo from "../../../public/images/ramadhan-login-06.png";
+import logo1 from "../../../public/images/ramadhan-login-06.png";
+import logo2 from "../../../public/images/ramadhan-login-04.png";
 import supported from "../../../public/images/ramadhan-login-18.png";
 import powered from "../../../public/images/ramadhan-login-19.png";
 
 const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [selectedArt, setSelectedArt] = useState<StaticImageData>(art12); // Default image
+  const [selectedLogo, setSelectedLogo] = useState<StaticImageData>(logo1); // Default image
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
       const subdomain = hostname.split(".")[0]; // Ambil subdomain pertama
 
-      // Mapping subdomain ke gambar tertentu
-      const subdomainImages: Record<string, StaticImageData> = {
+      // Mapping subdomain ke art tertentu
+      const subdomainArt: Record<string, StaticImageData> = {
         login: art12, // Default
         brands: art14,
         leminerale: art15,
@@ -33,7 +35,16 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       };
 
       // Set gambar berdasarkan subdomain, jika tidak ada pakai default (art12)
-      setSelectedArt(subdomainImages[subdomain] || art12);
+      setSelectedArt(subdomainArt[subdomain] || art12);
+
+      // Mapping subdomain ke logo tertentu
+      const subdomainLogo: Record<string, StaticImageData> = {
+        login: logo1, // Default
+        leminerale: logo2,
+      };
+
+      // Set logo berdasarkan subdomain, jika tidak ada pakai default (logo1)
+      setSelectedLogo(subdomainLogo[subdomain] || logo1);
     }
   }, []);
 
@@ -53,7 +64,7 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {/* Headerssss */}
         <Link href="/" className="w-full flex justify-end">
           <Image
-            src={logo}
+            src={selectedLogo}
             alt="Logo Masjid Istiqlal"
             width={373}
             height={258}

@@ -5,7 +5,7 @@
 // External libraries
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaLinkedin,
   FaWhatsapp,
@@ -18,8 +18,34 @@ import {
 import Subscribe from "./SubscribeForm";
 
 const Footer: React.FC = () => {
+  const [footerClass, setFooterClass] = useState<string>(
+    "w-full bg-footer-coklat py-4 px-4 md:px-20"
+  ); // Default footer class
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+      const subdomain = hostname.split(".")[0]; // Ambil subdomain pertama
+
+      // Mapping subdomain ke class tertentu
+      const subdomainClasses: Record<string, string> = {
+        login: "w-full bg-footer-coklat py-4 px-4 md:px-20", // Default
+        brands: "w-full bg-voyage1-footer py-4 px-4 md:px-20",
+        leminerale: "w-full bg-leminerale-footer py-4 px-4 md:px-20",
+        nota: "w-full bg-vooyage2-footer py-4 px-4 md:px-20",
+        voyage: "w-full bg-voyage1-footer py-4 px-4 md:px-20",
+      };
+
+      // Set class berdasarkan subdomain, jika tidak ada pakai default
+      setFooterClass(
+        subdomainClasses[subdomain] ||
+          "w-full bg-footer-coklat py-4 px-4 md:px-20"
+      );
+    }
+  }, []);
+
   return (
-    <footer className="w-full bg-footer-coklat py-4 px-4 md:px-20">
+    <footer className={footerClass}>
       <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
         <div className="w-full flex flex-col">
           {/* Newsletter Signup */}

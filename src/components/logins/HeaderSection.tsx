@@ -3,7 +3,7 @@
 // External libraries
 import Image from "next/image";
 import Link from "next/link";
-import { FaClockRotateLeft, FaMosque, FaUser, FaWallet } from "react-icons/fa6";
+import { FaClockRotateLeft, FaUser, FaWallet } from "react-icons/fa6";
 
 export default function Header() {
   return (
@@ -23,11 +23,6 @@ export default function Header() {
       <div className="w-1/2 flex justify-end gap-4">
         {/* Icons Section */}
         <div className="flex space-x-4">
-          <button className="sm:w-10 w-8 sm:h-10 h-8 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
-            <Link href="/">
-              <FaMosque />
-            </Link>
-          </button>
           <button className="sm:w-10 w-8 sm:h-10 h-8 flex items-center justify-center text-xl rounded-lg bg-box-icon text-icon-wording">
             <Link href="/user">
               <FaUser />

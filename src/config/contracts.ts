@@ -8,6 +8,12 @@ import { client } from "@/config/client";
 import { base, baseSepolia } from "@/config/rantais";
 
 // All Non-Fungible Tokens Contracts
+// Kupon Ramadhan on Base
+export const kuponRamadhan = getContract({
+  address: "0xFff11121d7f0e562207acb9Dc340988e077c9240",
+  chain: base,
+  client,
+});
 // MEMORA ONE on Base.
 export const memoraOneOnBase = getContract({
   address: "0x1925B991C5e2eC45BA1f34786BAd405d58202140",
@@ -16,7 +22,7 @@ export const memoraOneOnBase = getContract({
 });
 
 // Kupon Ramadhan on Base Sepolia.
-export const kuponRamadhan = getContract({
+export const kup0nRamadhan = getContract({
   address: "0xE58C2Bde65D61C452d12dE4DB6B9D19525c73E2f",
   chain: baseSepolia,
   client,
