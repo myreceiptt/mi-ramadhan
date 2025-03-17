@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     "Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru, kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!",
   metadataBase: new URL("https://ramadhan.voyage.co.id"),
   authors: [
-    { name: "MyReceipt", url: "https://www.straight-line.org" },
-    { name: "Prof. NOTA", url: "https://nota.straight-line.org" },
+    { name: "MyReceipt", url: "https://nyreceipt.endhonesa.com" },
+    { name: "Prof. NOTA", url: "https://nota.endhonesa.com" },
   ],
   creator: "MyReceipt and Friends",
   publisher: "Voyage.co.id",

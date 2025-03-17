@@ -6,12 +6,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { getContractEvents } from "thirdweb";
+import React, { useState } from "react";
+// import { getContractEvents } from "thirdweb";
 import {
   balanceOfBatch as balanceOfBatchERC1155,
   getNFTs,
-  transferSingleEvent,
 } from "thirdweb/extensions/erc1155";
 
 import {
@@ -38,16 +37,16 @@ import TransferButton from "./TransferButton";
 
 export default function PointsTab() {
   const activeAccount = useActiveAccount();
-//   const [transferEvents, setTransferEvents] = useState<
-//     Awaited<ReturnType<typeof getContractEvents>>
-//   >([]);
+  // const [transferEvents, setTransferEvents] = useState<
+  //   Awaited<ReturnType<typeof getContractEvents>>
+  // >([]);
 
   // State for modal
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedTokenId, setSelectedTokenId] = useState<bigint | null>(null);
 
   // Tabs const
-//   const [activeTab, setActiveTab] = useState("tab1");
+  //   const [activeTab, setActiveTab] = useState("tab1");
 
   // Ambil balance NFT yang dimiliki user
   const { data: ownedNfts } = useReadContract(balanceOfBatchERC1155, {
@@ -64,29 +63,29 @@ export default function PointsTab() {
   });
 
   // Ambil riwayat transfer ERC1155 NFT
-  useEffect(() => {
-    const fetchTransferEvents = async () => {
-      if (!activeAccount || !activeAccount.address) return;
+  // useEffect(() => {
+  //   const fetchTransferEvents = async () => {
+  //     if (!activeAccount || !activeAccount.address) return;
 
-      try {
-        const events = await getContractEvents({
-          contract: kuponRamadhan,
-          events: [
-            transferSingleEvent({
-              _from: activeAccount.address,
-            }),
-          ],
-        });
-        console.error("Fetched transfer events:", events);
+  //     try {
+  //       const events = await getContractEvents({
+  //         contract: kuponRamadhan,
+  //         events: [
+  //           transferSingleEvent({
+  //             _from: activeAccount.address,
+  //           }),
+  //         ],
+  //       });
+  //       console.error("Fetched transfer events:", events);
 
-        setTransferEvents(events);
-      } catch (error) {
-        console.error("Error fetching transfer events:", error);
-      }
-    };
+  //       setTransferEvents(events);
+  //     } catch (error) {
+  //       console.error("Error fetching transfer events:", error);
+  //     }
+  //   };
 
-    fetchTransferEvents();
-  }, [activeAccount]);
+  //   fetchTransferEvents();
+  // }, [activeAccount]);
 
   return (
     <section className="md:w-2xl w-full flex flex-col gap-2 items-center px-0 sm:px-4">
