@@ -6,11 +6,23 @@
 import React from "react";
 
 // Components libraries
-import TokenFallback from "@/components/contents/TokenFallback";
+import SouvenirsList from "@/components/contents/SouvenirsList";
 import DynamicLoginPage from "@/components/logins/DynamicLogin";
 
-const FallbackPage: React.FC = () => (
-  <DynamicLoginPage ContentComponent={() => <TokenFallback />} />
+const pageTitle1 = "Freemium";
+const pageTitle2 = "Kartu Kolektibel";
+const tokenIds = ["3", "4", "5", "6", "7", "8", "9"];
+
+const KolektibelPage: React.FC = () => (
+  <DynamicLoginPage
+    ContentComponent={() => (
+      <SouvenirsList
+        tokenIds={tokenIds}
+        title1={pageTitle1}
+        title2={pageTitle2}
+      />
+    )}
+  />
 );
 
-export default FallbackPage;
+export default KolektibelPage;
