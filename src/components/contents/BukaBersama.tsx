@@ -28,7 +28,7 @@ import Loader from "@/components/contents/ReusableLoader";
 
 const BukaBersama: React.FC = () => {
   const tokenNumber = "0";
-  const tokenMedia = "/images/virtual-collectible.png";
+  const tokenMedia = "/images/bukabersama.png";
   // Ensure state variables are properly declared
   const [currentTime, setCurrentTime] = useState(new Date());
   const [startTime, setStartTime] = useState<Date | null>(null);
