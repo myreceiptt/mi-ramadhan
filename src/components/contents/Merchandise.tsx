@@ -4,9 +4,13 @@
 
 // External libraries
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { getNFT, balanceOf } from "thirdweb/extensions/erc1155";
+import {
+  balanceOf,
+  canClaim,
+  getNFT,
+  getClaimConditionById,
+} from "thirdweb/extensions/erc1155";
 import {
   ClaimButton,
   MediaRenderer,
@@ -16,37 +20,124 @@ import {
 
 // Blockchain configurations
 import { client } from "@/config/client";
-import { kuponRamadhan } from "@/config/contracts";
+import { istiqlalDigitalLegacy } from "@/config/contracts";
 import { base } from "@/config/rantais";
 
+// Components libraries
+import Loader from "@/components/contents/ReusableLoader";
+
 const Merchandise: React.FC = () => {
-  const router = useRouter();
-  const params = useParams();
-  const smartAccount = useActiveAccount();
-
-  const tokenId = params.tokenId;
-  const tokenIdString = Array.isArray(tokenId) ? tokenId[0] : tokenId ?? "0";
-  const tokenIdBigInt = BigInt(tokenIdString);
-  const tokenIdNumber = parseInt(tokenIdString, 10);
-
+  const tokenNumber = "2";
+  const tokenMedia = "/images/merchandise.png";
   // Ensure state variables are properly declared
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [startTime, setStartTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const getCountdownString = () => {
+    if (!startTime) return null;
+
+    const totalSeconds = Math.floor(
+      (startTime.getTime() - currentTime.getTime()) / 1000
+    );
+
+    if (totalSeconds <= 0) return null;
+
+    const days = Math.floor(totalSeconds / (3600 * 24));
+    const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  };
+
+  const [claimedSupply, setClaimedSupply] = useState<bigint | null>(null);
+  const [maxSupply, setMaxSupply] = useState<bigint | null>(null);
+
   const [isProcessing, setIsProcessing] = useState(false);
+  const [erc1155Claimed, setErc1155Claimed] = useState(true);
+
+  const [canClaimReason, setCanClaimReason] = useState<string | null>(null);
   const [pesanTunggu, setPesanTunggu] = useState<string | null>(null);
+  const [pesanKirim, setPesanKirim] = useState<string | null>(null);
   const [pesanSukses, setPesanSukses] = useState<string | null>(null);
   const [pesanGagal, setPesanGagal] = useState<string | null>(null);
 
+  const activeAccount = useActiveAccount();
+
+  const tokenIdString = tokenNumber;
+  const tokenIdBigInt = BigInt(tokenIdString);
+  const tokenIdNumber = parseInt(tokenIdString, 10);
+
+  // Fetch Active Claim Condition
+  useEffect(() => {
+    async function checkActiveClaimCondition() {
+      try {
+        const activeClaimCondition = await getClaimConditionById({
+          contract: istiqlalDigitalLegacy,
+          tokenId: tokenIdBigInt,
+          conditionId: 0n,
+        });
+        console.log("Active Claim:", activeClaimCondition);
+
+        // Convert dan Simpan timestamp to Date
+        const timestamp = Number(activeClaimCondition.startTimestamp);
+        setStartTime(new Date(timestamp * 1000));
+
+        // Simpan supply
+        setClaimedSupply(activeClaimCondition.supplyClaimed);
+        setMaxSupply(activeClaimCondition.maxClaimableSupply);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+    checkActiveClaimCondition();
+  }, [tokenIdBigInt]);
+
+  // Fetch Claimability using "canClaim"
+  useEffect(() => {
+    async function checkClaimability() {
+      try {
+        const canClaimResult = await canClaim({
+          contract: istiqlalDigitalLegacy,
+          claimer: activeAccount?.address ?? "",
+          quantity: 1n,
+          tokenId: tokenIdBigInt,
+        });
+
+        console.log("Can Claim:", canClaimResult);
+
+        // Check if the user can claim or not,
+        setErc1155Claimed(!canClaimResult.result);
+        setCanClaimReason(canClaimResult.reason || null);
+      } catch (error) {
+        console.error("Error:", error);
+        setErc1155Claimed(true); // Assume claimed (can't claim) if an error occurs
+      }
+    }
+
+    checkClaimability();
+  }, [activeAccount?.address, tokenIdBigInt]);
+
   // Fetch NFT metadata
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
-    contract: kuponRamadhan,
+    contract: istiqlalDigitalLegacy,
     tokenId: tokenIdBigInt,
   });
 
   // Fetch user's owned NFTs
   const { data: ownedNfts } = useReadContract(balanceOf, {
-    contract: kuponRamadhan,
-    owner: smartAccount?.address ?? "",
+    contract: istiqlalDigitalLegacy,
+    owner: activeAccount?.address ?? "",
     tokenId: tokenIdBigInt,
-    queryOptions: { enabled: !!smartAccount?.address && !!tokenId },
+    queryOptions: { enabled: !!activeAccount?.address && !!tokenIdString },
   });
 
   // Calculate price (fixed values: 0.00 for 0-22, 4.74 for 23+)
@@ -56,19 +147,11 @@ const Merchandise: React.FC = () => {
     return tokenIdNumber >= 23 ? "x.xx" : "0.00";
   };
 
-  // Ensure tokenId exists, otherwise redirect
-  useEffect(() => {
-    if (!tokenId) {
-      router.push("/");
-    }
-  }, [tokenId, router]);
-
-  if (!tokenId || isNftLoading) {
+  // Ensure tokenId exists
+  if (!tokenIdString || isNftLoading) {
     return (
       <main className="grid gap-4 place-items-center">
-        <h2 className="text-left text-sm font-medium text-icon-wording">
-          Loading...
-        </h2>
+        <Loader message="Loading..." />
       </main>
     );
   }
@@ -95,10 +178,7 @@ const Merchandise: React.FC = () => {
           {nft ? (
             <MediaRenderer
               client={client}
-              src={
-                nft?.metadata?.image ||
-                "/images/bukhari-virtual-collectibles.gif"
-              }
+              src={nft?.metadata?.image || tokenMedia}
               alt={
                 nft?.metadata?.name ? `${nft.metadata.name} NFT` : "NFT Image"
               }
@@ -115,7 +195,7 @@ const Merchandise: React.FC = () => {
         <div className="flex flex-col gap-2 lg:gap-4 items-start justify-center h-full">
           {/* Title */}
           <h1 className="text-left text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-hitam-judul-body">
-            {nft?.metadata.name || "Souvenir Details"}
+            {nft?.metadata.name || "Collectible Name"}
           </h1>
 
           <div className="flex flex-row gap-2">
@@ -126,8 +206,8 @@ const Merchandise: React.FC = () => {
               &#9673;
             </span>
             <h1 className="text-left text-sm font-medium text-icon-wording">
-              <Link href="https://bukharicreative.group/" target="_blank">
-                Bukhari Creative Group
+              <Link href="https://lab-x.co/" target="_blank">
+                LabX
               </Link>
             </h1>
           </div>
@@ -139,21 +219,10 @@ const Merchandise: React.FC = () => {
           />
 
           {/* Success or Error Messages */}
-          {pesanTunggu && (
-            <h4 className="text-left text-sm font-medium text-icon-wording">
-              {pesanTunggu}
-            </h4>
-          )}
-          {pesanSukses && (
-            <h4 className="text-left text-sm font-medium text-icon-wording">
-              {pesanSukses}
-            </h4>
-          )}
-          {pesanGagal && (
-            <h4 className="text-left text-sm font-medium text-icon-wording">
-              {pesanGagal}
-            </h4>
-          )}
+          {pesanTunggu && <Loader message={pesanTunggu} />}
+          {pesanKirim && <Loader message={pesanKirim} />}
+          {pesanSukses && <Loader message={pesanSukses} />}
+          {pesanGagal && <Loader message={pesanGagal} />}
 
           {/* NFT Info */}
           <div className="w-full grid grid-cols-3">
@@ -171,7 +240,9 @@ const Merchandise: React.FC = () => {
               ${calculatePrice()}
             </h2>
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
-              1899
+              {claimedSupply !== null && maxSupply !== null
+                ? `${claimedSupply.toString()}/${maxSupply.toString()}`
+                : "Loading..."}
             </h2>
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
               {ownedNfts ? ownedNfts.toString() : "0"}
@@ -183,58 +254,61 @@ const Merchandise: React.FC = () => {
             unstyled
             className={`w-full rounded-lg p-2 text-base font-semibold transition-colors duration-300 ease-in-out
               ${
-                isProcessing || (ownedNfts && Number(ownedNfts) >= 2)
+                isProcessing || erc1155Claimed
                   ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
                   : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body"
               }
             `}
-            contractAddress={kuponRamadhan.address}
+            contractAddress={istiqlalDigitalLegacy.address}
             payModal={payModalConfig}
-            chain={kuponRamadhan.chain}
+            chain={istiqlalDigitalLegacy.chain}
             client={client}
             claimParams={{
               type: "ERC1155",
               quantity: 1n,
               tokenId: tokenIdBigInt,
             }}
-            // disabled={Boolean(
-            //   isProcessing || (ownedNfts && Number(ownedNfts) >= 2)
-            // )}
-            disabled={Boolean(
-              isProcessing ||
-                (ownedNfts && Number(ownedNfts) >= 2) ||
-                // Number(calculatePrice()) > 0 // 🔥 Disable if price is greater than 0
-                Number(calculatePrice()) !== 0 // 🔥 Disable if price is greater than 0
-            )}
+            disabled={Boolean(isProcessing || erc1155Claimed)}
             onClick={() => {
               setIsProcessing(true);
-              setPesanTunggu("Bismillah! Be patient and wait.");
+              setPesanTunggu("Processing. Be patient and wait.");
               setPesanSukses(null);
               setPesanGagal(null);
             }}
             onTransactionSent={() => {
-              setIsProcessing(true);
-              setPesanTunggu("Bismillah! Be patient and wait.");
-              setPesanSukses(null);
-              setPesanGagal(null);
+              setPesanTunggu(null);
+              setPesanKirim("Claiming your Virtual Collectible.");
             }}
             onError={(error) => {
-              setPesanGagal(`${error.message}`);
-              setPesanSukses(null);
               setIsProcessing(false);
               setPesanTunggu(null);
+              setPesanKirim(null);
+              setPesanGagal(`${error.message}`);
             }}
             onTransactionConfirmed={async () => {
-              setPesanSukses("Alhamdulillah! Successful!");
-              setPesanGagal(null);
               setIsProcessing(false);
-              setPesanTunggu(null);
+              setPesanKirim(null);
+              setPesanSukses("Successful! Virtual Collectible claimed.");
+              setErc1155Claimed(true);
             }}>
-            {/* {Number(calculatePrice()) > 0 ? "Coming Soon" : "Collect Now"} */}
-            {Number(calculatePrice()) !== 0 ? "Coming Soon" : "Collect Now"}
+            <span>
+              {startTime && currentTime < startTime ? (
+                <>Available in: {getCountdownString()}</>
+              ) : erc1155Claimed ? (
+                canClaimReason?.includes("DropClaimExceedLimit") ? (
+                  "Already Claimed"
+                ) : canClaimReason?.includes("DropClaimExceedMaxSupply") ? (
+                  "Claim Closed"
+                ) : (
+                  "Claim Closed"
+                )
+              ) : (
+                "Claim Now"
+              )}
+            </span>
           </ClaimButton>
           <h4 className="text-left text-xs font-medium text-icon-wording">
-            &#42;Maximum 2 editions per owner.
+            &#42;Maximum 1 edition per owner.
           </h4>
         </div>
       </div>
@@ -278,26 +352,6 @@ const NFTDescription: React.FC<{
           ))}
       {isLongDescription && (
         <div className="flex justify-end items-center gap-4 pt-2 mb-2">
-          {isExpanded && (
-            <>
-              {/* <Link
-                href={`https://opensea.io/assets/base/0xc226653e9c043674a48c6b7be33526771c34389a/${tokenIdNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium text-hitam-judul-body hover:underline cursor-pointer">
-                View on OpenSea
-              </Link> */}
-
-              {/* <Link
-                href={`https://rarible.com/token/base/0xc226653e9c043674a48c6b7be33526771c34389a:${tokenIdNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium text-hitam-judul-body hover:underline cursor-pointer">
-                View on Rarible
-              </Link> */}
-            </>
-          )}
-
           {/* Read More / Read Less */}
           <p
             className="text-xs font-medium text-hitam-judul-body hover:underline cursor-pointer"
