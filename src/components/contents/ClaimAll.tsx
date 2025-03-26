@@ -23,7 +23,7 @@ import {
 
 // Blockchain configurations
 import { client } from "@/config/client";
-import { kuponRamadhan, p0inIstiqlal } from "@/config/contracts";
+import { kuponRamadhan, poinIstiqlal } from "@/config/contracts";
 
 // Components libraries
 import Loader from "../contents/ReusableLoader";
@@ -103,7 +103,7 @@ const ClaimAll: React.FC = () => {
     async function fetchClaimCondition20() {
       try {
         const activeCondition20 = await claimCondition20({
-          contract: p0inIstiqlal,
+          contract: poinIstiqlal,
           claimer: activeAccount?.address ?? "",
           quantity: "1",
         });
@@ -123,7 +123,7 @@ const ClaimAll: React.FC = () => {
 
   // Fetch user's ERC20 Token Balance
   const { data: poinBalance } = useReadContract(balanceOfERC20, {
-    contract: p0inIstiqlal,
+    contract: poinIstiqlal,
     address: activeAccount?.address ?? "",
   });
 
@@ -273,8 +273,8 @@ const ClaimAll: React.FC = () => {
                     : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
                 }
             `}
-              contractAddress={p0inIstiqlal.address}
-              chain={p0inIstiqlal.chain}
+              contractAddress={poinIstiqlal.address}
+              chain={poinIstiqlal.chain}
               client={client}
               claimParams={{
                 type: "ERC20",

@@ -184,7 +184,7 @@ const AccountDetails: React.FC = () => {
             </div>
             <div className="flex flex-col gap-0">
               <h4 className="text-left text-xs font-normal text-icon-wording">
-                &#42;Jangan lupa tukarkan Kupon Digital & Istiqlal Poin milik
+                &#42;Jangan lupa tukarkan Kartu Kolektibel & Poin Istiqlal milik
                 Anda. Ada kejutan menarik menanti Anda di bulan Ramadhan penuh
                 berkah ini.
               </h4>

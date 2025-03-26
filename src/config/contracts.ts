@@ -8,6 +8,12 @@ import { client } from "@/config/client";
 import { base, baseSepolia } from "@/config/rantais";
 
 // All Non-Fungible Tokens Contracts
+// Istiqlal Digital Legacy on Base
+export const istiqlalDigitalLegacy = getContract({
+  address: "0x937F5A27C0d6c979d5b9EBddebD1C666B70b88C1",
+  chain: base,
+  client,
+});
 // Kupon Ramadhan on Base
 export const kuponRamadhan = getContract({
   address: "0xFff11121d7f0e562207acb9Dc340988e077c9240",
@@ -36,6 +42,20 @@ export const memoraZer0 = getContract({
 });
 
 // All Non-Fungible Tokens Contracts
+// Poin Istiqlal on Base.
+export const poinIGF = getContract({
+  address: "0x2F2080A9EfcfF05B1175b0D613a61B992544AcE1",
+  chain: base,
+  client,
+});
+
+// Poin Istiqlal on Base.
+export const poinIstiqlal = getContract({
+  address: "0x01460F06aC46aBc2185db9Fa529564798eEC33C3",
+  chain: base,
+  client,
+});
+
 // BON VOYAGE Drop on Base.
 export const bonVoyageDrop = getContract({
   address: "0x237b1188F8BAC61f2E4e0EdF2D933F827262157C",

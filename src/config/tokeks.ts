@@ -12,8 +12,14 @@ export const tokeks = {
       icon: "/erc20-icons/bon.png",
     },
     {
-      address: "0xd0Ed4169B49940dCAF71e91Ae5968d24e0A53ae0",
+      address: "0x01460F06aC46aBc2185db9Fa529564798eEC33C3",
       name: "Poin Istiqlal",
+      symbol: "PMI",
+      icon: "/erc20-icons/pmi.png",
+    },
+    {
+      address: "0x2F2080A9EfcfF05B1175b0D613a61B992544AcE1",
+      name: "Poin IGF",
       symbol: "IGF",
       icon: "/erc20-icons/igf.png",
     },
@@ -28,8 +34,8 @@ export const tokeks = {
     {
       address: "0xd0Ed4169B49940dCAF71e91Ae5968d24e0A53ae0",
       name: "Poin Istiqlal",
-      symbol: "IGF",
-      icon: "/erc20-icons/igf.png",
+      symbol: "PMI",
+      icon: "/erc20-icons/pmi.png",
     },
   ],
 };

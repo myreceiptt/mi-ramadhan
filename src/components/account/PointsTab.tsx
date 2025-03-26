@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-// import { getContractEvents } from "thirdweb";
 import {
   balanceOfBatch as balanceOfBatchERC1155,
   getNFTs,
@@ -17,38 +16,33 @@ import {
   MediaRenderer,
   useActiveAccount,
   useReadContract,
+  useWalletBalance,
 } from "thirdweb/react";
 
 // Blockchain configurations
 import { client } from "@/config/client";
-import { kuponRamadhan } from "@/config/contracts";
+import { kuponRamadhan, poinIstiqlal } from "@/config/contracts";
 
 // Component libraries
+import Loader from "../contents/ReusableLoader";
 import TransferButton from "./TransferButton";
-
-// Define correct type for TransferSingle event arguments
-// type TransferSingleEventArgs = {
-//   _operator: string;
-//   _from: string;
-//   _to: string;
-//   _id: bigint;
-//   _value: bigint;
-// };
 
 export default function PointsTab() {
   const activeAccount = useActiveAccount();
-  // const [transferEvents, setTransferEvents] = useState<
-  //   Awaited<ReturnType<typeof getContractEvents>>
-  // >([]);
 
   // State for modal
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedTokenId, setSelectedTokenId] = useState<bigint | null>(null);
 
-  // Tabs const
-  //   const [activeTab, setActiveTab] = useState("tab1");
+  // Ambil balance token yang dimiliki user
+  const { data } = useWalletBalance({
+    chain: poinIstiqlal.chain,
+    address: activeAccount?.address ?? "",
+    client: client,
+    tokenAddress: poinIstiqlal.address,
+  });
+  console.log("balance", data?.displayValue, data?.symbol);
 
-  // Ambil balance NFT yang dimiliki user
   const { data: ownedNfts } = useReadContract(balanceOfBatchERC1155, {
     contract: kuponRamadhan,
     owners: Array(31).fill(activeAccount?.address ?? ""),
@@ -56,123 +50,94 @@ export default function PointsTab() {
   });
 
   // Ambil metadata untuk semua NFT
-  const { data: nfts } = useReadContract(getNFTs, {
+  const { data: nfts, isLoading: isNftLoading } = useReadContract(getNFTs, {
     contract: kuponRamadhan,
     start: 0,
     count: 31,
   });
 
-  // Ambil riwayat transfer ERC1155 NFT
-  // useEffect(() => {
-  //   const fetchTransferEvents = async () => {
-  //     if (!activeAccount || !activeAccount.address) return;
-
-  //     try {
-  //       const events = await getContractEvents({
-  //         contract: kuponRamadhan,
-  //         events: [
-  //           transferSingleEvent({
-  //             _from: activeAccount.address,
-  //           }),
-  //         ],
-  //       });
-  //       console.error("Fetched transfer events:", events);
-
-  //       setTransferEvents(events);
-  //     } catch (error) {
-  //       console.error("Error fetching transfer events:", error);
-  //     }
-  //   };
-
-  //   fetchTransferEvents();
-  // }, [activeAccount]);
+  // Ensure ownedNfts exists, otherwise show this "Memuat..." message.
+  if (!ownedNfts || isNftLoading) {
+    return (
+      <section className="w-full flex flex-col gap-2 pt-4 items-start">
+        <Loader message="Memuat..." />
+      </section>
+    );
+  }
 
   return (
-    <section className="md:w-2xl w-full flex flex-col gap-2 items-center px-0 sm:px-4">
+    <section className="w-full flex flex-col gap-2 pt-4 items-start">
+      {/* NFT List Grid */}
       {ownedNfts?.some((balance) => balance > 0n) ? (
-        <>
-          <h2 className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-hitam-judul-body">
-            Istiqlal Poin
-          </h2>
-          <h3 className="text-center text-sm font-medium text-icon-wording">
-            Ini adalah saldo Istiqlal Poin milik Anda dan riwayat penggunaannya.
-          </h3>
+        <div className="grid sm:grid-cols-3 grid-cols-2 gap-6">
+          {ownedNfts?.map((balance, index) => {
+            if (balance > 0n) {
+              const nft = nfts?.[index];
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}>
+                  <div className="w-full grid grid-cols-1 gap-2 rounded-lg">
+                    {nft ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setSelectedImage(nft.metadata.image ?? null);
+                            setSelectedTokenId(nft.id);
+                          }}>
+                          <MediaRenderer
+                            client={client}
+                            src={
+                              nft.metadata.image ||
+                              "/images/ramadhan-login-09.png"
+                            }
+                            alt={
+                              nft.metadata.name
+                                ? `Kupon ${nft.metadata.name}`
+                                : "Kupon Digital"
+                            }
+                            className="rounded-lg w-full cursor-pointer"
+                          />
+                        </button>
 
-          {/* NFT List Grid */}
-          <div className="grid sm:grid-cols-3 grid-cols-2 gap-4 items-center">
-            {ownedNfts?.map((balance, index) => {
-              if (balance > 0n) {
-                const nft = nfts?.[index];
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}>
-                    <div className="w-full grid grid-cols-1 gap-2 p-2 border border-solid border-border-tombol rounded-lg">
-                      {nft ? (
-                        <>
-                          <button
-                            onClick={() => {
-                              setSelectedImage(nft.metadata.image ?? null);
-                              setSelectedTokenId(nft.id);
-                            }}>
-                            <MediaRenderer
-                              client={client}
-                              src={
-                                nft.metadata.image ||
-                                "/images/ramadhan-login-09.png"
-                              }
-                              alt={
-                                nft.metadata.name
-                                  ? `Kupon ${nft.metadata.name}`
-                                  : "Kupon Digital"
-                              }
-                              className="rounded-lg w-full cursor-pointer"
-                            />
-                          </button>
-
-                          <h2 className="text-center text-xs font-semibold text-icon-wording">
-                            {nft?.metadata?.attributes?.[1] ? (
-                              <>
-                                {
-                                  (
-                                    nft.metadata.attributes[1] as {
-                                      trait_type: string;
-                                      value: string;
-                                    }
-                                  ).value
-                                }
-                              </>
-                            ) : (
-                              `Tidak ada atribut tersedia untuk ${nft.id}`
-                            )}
-                          </h2>
-                          <h2 className="text-center text-xs font-semibold text-icon-wording">
-                            {balance.toString()} Kupon
-                          </h2>
-                        </>
-                      ) : (
                         <h2 className="text-center text-xs font-semibold text-icon-wording">
-                          Tidak ada data tersedia.
+                          Saldo{" "}
+                          {nft?.metadata?.attributes?.[1] ? (
+                            <>
+                              {
+                                (
+                                  nft.metadata.attributes[1] as {
+                                    trait_type: string;
+                                    value: string;
+                                  }
+                                ).value
+                              }
+                            </>
+                          ) : (
+                            `Tidak ada atribut tersedia untuk ${nft.id}`
+                          )}{" "}
+                          {balance.toString()}
                         </h2>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              }
-              return null;
-            })}
-          </div>
-        </>
+                      </>
+                    ) : (
+                      <h2 className="text-center text-xs font-semibold text-icon-wording">
+                        Tidak ada data tersedia.
+                      </h2>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            }
+            return null;
+          })}
+        </div>
       ) : (
         <>
           {/* Belum memiliki Kupon Digital */}
-          <h2 className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-hitam-judul-body">
-            Kupon Digital
-          </h2>
           <h3 className="text-center text-sm font-medium text-icon-wording">
-            Saat ini Anda belum memiliki Kupon Digital.
+            Saat ini Anda belum memiliki Poin Istiqlal.
           </h3>
 
           <div className="grid grid-cols-1 mt-2 md:mt-4 mb-4 md:mb-8 lg:mb-12">
@@ -181,7 +146,7 @@ export default function PointsTab() {
               <button
                 type="button"
                 className="rounded-lg py-4 px-12 text-back-ground bg-hitam-judul-body text-base font-semibold cursor-pointer">
-                Klaim Kupon & Poin
+                Klaim Sekarang
               </button>
             </Link>
           </div>
@@ -191,8 +156,8 @@ export default function PointsTab() {
             <Image
               src="/images/ramadhan-login-01.png"
               alt="Background Image"
-              width={1430}
-              height={541}
+              width={3840}
+              height={1072}
               objectFit="cover"
               objectPosition="top"
               priority
@@ -215,7 +180,7 @@ export default function PointsTab() {
             }}>
             <div className="flex flex-col gap-2 lg:gap-4 items-start justify-center h-full">
               <motion.div
-                className="relative flex flex-col items-center gap-2 p-2 bg-back-ground border border-solid border-border-tombol rounded-lg"
+                className="relative flex flex-col items-center gap-4 p-2 rounded-lg"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
@@ -239,12 +204,5 @@ export default function PointsTab() {
         )}
       </AnimatePresence>
     </section>
-    // <section className="w-full flex flex-col gap-2 sm:items-start items-center px-0 sm:px-4">
-    //   <h2 className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-hitam-judul-body">
-
-    //   </h2>
-    //   <h3 className="text-center text-sm font-medium text-icon-wording">
-    //   </h3>
-    // </section>
   );
 }
