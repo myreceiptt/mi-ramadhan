@@ -39,7 +39,7 @@ const TokenFallback: React.FC = () => {
         <button
           type="button"
           className="rounded-lg py-4 px-12 text-back-ground bg-hitam-judul-body text-base font-semibold"
-          onClick={() => router.push("/")}>
+          onClick={() => router.push("/kolektibel")}>
           Go Back to Home Page!
         </button>
       </div>

@@ -16,7 +16,7 @@ import {
 
 // Blockchain configurations
 import { client } from "@/config/client";
-import { kuponRamadhan } from "@/config/contracts";
+import { istiqlalDigitalLegacy } from "@/config/contracts";
 import { base } from "@/config/rantais";
 
 const Kolektibel: React.FC = () => {
@@ -37,13 +37,13 @@ const Kolektibel: React.FC = () => {
 
   // Fetch NFT metadata
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
-    contract: kuponRamadhan,
+    contract: istiqlalDigitalLegacy,
     tokenId: tokenIdBigInt,
   });
 
   // Fetch user's owned NFTs
   const { data: ownedNfts } = useReadContract(balanceOf, {
-    contract: kuponRamadhan,
+    contract: istiqlalDigitalLegacy,
     owner: smartAccount?.address ?? "",
     tokenId: tokenIdBigInt,
     queryOptions: { enabled: !!smartAccount?.address && !!tokenId },
@@ -188,9 +188,9 @@ const Kolektibel: React.FC = () => {
                   : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body"
               }
             `}
-            contractAddress={kuponRamadhan.address}
+            contractAddress={istiqlalDigitalLegacy.address}
             payModal={payModalConfig}
-            chain={kuponRamadhan.chain}
+            chain={istiqlalDigitalLegacy.chain}
             client={client}
             claimParams={{
               type: "ERC1155",

@@ -161,7 +161,7 @@ const NFTLister: React.FC<NFTListerProps> = ({ dropContract, tokenId }) => {
         </h2>
       ) : nft ? (
         <>
-          <Link href={`/token/${tokenId}`}>
+          <Link href={`/kolektibel/kartu/${tokenId}`}>
             <MediaRenderer
               client={client}
               src={
@@ -182,7 +182,7 @@ const NFTLister: React.FC<NFTListerProps> = ({ dropContract, tokenId }) => {
               Price ${price}
             </h2>
           </div>
-          <Link href={`/token/${tokenId}`}>
+          <Link href={`/kolektibel/kartu/${tokenId}`}>
             <button className="w-full rounded-lg p-2 text-back-ground bg-hitam-judul-body text-base font-semibold">
               {/* {Number(price) > 0 ? "Coming Soon" : "Collect Now"} */}
               {Number(price) !== 0 ? "Coming Soon" : "Collect Now"}
