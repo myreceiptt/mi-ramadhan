@@ -204,7 +204,7 @@ const Kolektibel: React.FC = () => {
               isProcessing ||
                 (ownedNfts && Number(ownedNfts) >= 1) ||
                 // Number(calculatePrice()) > 0 // 🔥 Disable if price is greater than 0
-                Number(calculatePrice()) !== 0 // 🔥 Disable if price is greater than 0
+                Number(calculatePrice()) == 0 // 🔥 Disable if price is greater than 0
             )}
             onClick={() => {
               setIsProcessing(true);
@@ -302,7 +302,7 @@ const NFTDescription: React.FC<{
           <p
             className="text-xs font-medium text-hitam-judul-body hover:underline cursor-pointer"
             onClick={() => setIsExpanded(!isExpanded)}>
-            {isExpanded ? "Read Less" : "Read More"}
+            {isExpanded ? "Tutup" : "Buka"}
           </p>
         </div>
       )}

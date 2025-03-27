@@ -357,7 +357,7 @@ const NFTDescription: React.FC<{
           <p
             className="text-xs font-medium text-hitam-judul-body hover:underline cursor-pointer"
             onClick={() => setIsExpanded(!isExpanded)}>
-            {isExpanded ? "Read Less" : "Read More"}
+            {isExpanded ? "Tutup" : "Buka"}
           </p>
         </div>
       )}
