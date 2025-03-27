@@ -102,13 +102,7 @@ const Footer: React.FC = () => {
               href="/terms"
               target="_blank"
               className="text-xs text-center sm:text-left text-footer-copyright">
-              Kebijkan Privasi
-            </Link>
-            <Link
-              href="/terms"
-              target="_blank"
-              className="text-xs text-center sm:text-left text-footer-copyright">
-              Syarat & Ketentuan
+              Syarat & Ketentuan serta Kebijakan Privasi.
             </Link>
           </div>
         </div>

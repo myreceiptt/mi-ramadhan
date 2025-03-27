@@ -7,11 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import {
-  balanceOfBatch as balanceOfBatchERC1155,
-  getNFTs,
-} from "thirdweb/extensions/erc1155";
-
+import { getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
   MediaRenderer,
   useActiveAccount,
@@ -20,7 +16,7 @@ import {
 
 // Blockchain configurations
 import { client } from "@/config/client";
-import { kuponRamadhan } from "@/config/contracts";
+import { istiqlalDigitalLegacy, kuponRamadhan } from "@/config/contracts";
 
 // Component libraries
 // import Loader from "../contents/ReusableLoader";
@@ -30,90 +26,73 @@ export default function CouponsTab() {
   const activeAccount = useActiveAccount();
 
   // State for modal
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedTokenId, setSelectedTokenId] = useState<bigint | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  // Fetch owned NFTs 1
+  const { data: nftsIstiqlal } = useReadContract(getOwnedNFTs, {
+    contract: istiqlalDigitalLegacy,
+    address: activeAccount?.address || "",
+    start: 0,
+    count: 9,
+  });
+
+  // Fetch owned NFTs 2
+  const { data: nftsRamadhan } = useReadContract(getOwnedNFTs, {
+    contract: kuponRamadhan,
+    address: activeAccount?.address || "",
+    start: 0,
+    count: 30,
+  });
 
   // Ambil balance NFT yang dimiliki user
-  const { data: ownedNfts } = useReadContract(balanceOfBatchERC1155, {
-    contract: kuponRamadhan,
-    owners: Array(31).fill(activeAccount?.address ?? ""),
-    tokenIds: Array.from({ length: 31 }, (_, i) => BigInt(i)),
-  });
-
-  // Ambil metadata untuk semua NFT
-  const { data: nfts } = useReadContract(getNFTs, {
-    contract: kuponRamadhan,
-    start: 0,
-    count: 31,
-  });
+  const ownedNFTs = [...(nftsIstiqlal || []), ...(nftsRamadhan || [])];
 
   return (
     <>
       <section className="w-full flex flex-col gap-2 pt-4 items-start">
         {/* NFT List Grid */}
-        {ownedNfts?.some((balance) => balance > 0n) ? (
+        {ownedNFTs.length > 0 ? (
           <div className="grid sm:grid-cols-3 grid-cols-2 gap-6">
-            {ownedNfts?.map((balance, index) => {
-              if (balance > 0n) {
-                const nft = nfts?.[index];
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}>
-                    <div className="w-full grid grid-cols-1 gap-2 rounded-lg">
-                      {nft ? (
-                        <>
-                          <button
-                            onClick={() => {
-                              setSelectedImage(nft.metadata.image ?? null);
-                              setSelectedTokenId(nft.id);
-                            }}>
-                            <MediaRenderer
-                              client={client}
-                              src={
-                                nft.metadata.image ||
-                                "/images/ramadhan-login-09.png"
-                              }
-                              alt={
-                                nft.metadata.name
-                                  ? `Kupon ${nft.metadata.name}`
-                                  : "Kupon Digital"
-                              }
-                              className="rounded-lg w-full cursor-pointer"
-                            />
-                          </button>
+            {ownedNFTs.map((nft, index) => (
+              <motion.div
+                key={`${nft.owner}-${nft.id.toString()}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}>
+                <div className="w-full grid grid-cols-1 gap-2 rounded-lg">
+                  {nft ? (
+                    <>
+                      <button
+                        onClick={() => {
+                          setSelectedTokenId(nft.id);
+                          setSelectedImage(nft.metadata.image ?? null);
+                        }}>
+                        <MediaRenderer
+                          client={client}
+                          src={
+                            nft.metadata.image ||
+                            "/images/ramadhan-login-09.png"
+                          }
+                          alt={`Kupon ${
+                            nft.metadata.name || nft.id.toString()
+                          }`}
+                          className="rounded-lg w-full cursor-pointer"
+                        />
+                      </button>
 
-                          <h2 className="text-left text-sm font-semibold text-icon-wording">
-                            Kartu Puasa{" "}
-                            {nft?.metadata?.attributes?.[1] ? (
-                              <>
-                                {
-                                  (
-                                    nft.metadata.attributes[1] as {
-                                      trait_type: string;
-                                      value: string;
-                                    }
-                                  ).value
-                                }
-                              </>
-                            ) : (
-                              `Tidak ada atribut tersedia untuk ${nft.id}`
-                            )}
-                          </h2>
-                        </>
-                      ) : (
-                        <h2 className="text-center text-xs font-semibold text-icon-wording">
-                          Tidak ada data tersedia.
-                        </h2>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              }
-              return null;
-            })}
+                      <h2 className="text-left text-sm font-semibold text-icon-wording">
+                        {nft.metadata.name || `ID Kartu ${nft.id.toString()}`}
+                      </h2>
+                    </>
+                  ) : (
+                    <h2 className="text-center text-xs font-semibold text-icon-wording">
+                      Tidak ada data tersedia.
+                    </h2>
+                  )}
+                </div>
+              </motion.div>
+            ))}
           </div>
         ) : (
           <>
@@ -124,7 +103,7 @@ export default function CouponsTab() {
 
             <div className="grid grid-cols-1 mt-2 md:mt-4 mb-4 md:mb-8 lg:mb-12">
               {/* Home Page Button */}
-              <Link href="/">
+              <Link href="/kolektibel">
                 <button
                   type="button"
                   className="rounded-lg py-4 px-12 text-back-ground bg-hitam-judul-body text-base font-semibold cursor-pointer">
@@ -157,8 +136,8 @@ export default function CouponsTab() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => {
-                setSelectedImage(null);
                 setSelectedTokenId(null);
+                setSelectedImage(null);
               }}>
               <div className="flex flex-col gap-2 lg:gap-4 items-start justify-center h-full">
                 <motion.div
