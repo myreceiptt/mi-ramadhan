@@ -308,7 +308,8 @@ const Merchandise: React.FC = () => {
             </span>
           </ClaimButton>
           <h4 className="text-left text-xs font-medium text-icon-wording">
-            &#42;Soulbound, tidak dapat dipindahtangankan.
+            &#42;Maksimal 1 edisi per pemilik. Soulbound, tidak dapat
+            dipindahtangankan.
           </h4>
         </div>
       </div>

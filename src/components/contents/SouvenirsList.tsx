@@ -85,14 +85,14 @@ const SouvenirsList: React.FC<SouvenirsListProps> = ({
                 onClick={handleUnload}
                 disabled={visibleCount === INITIAL_ITEMS}
                 className="px-4 py-2 text-back-ground bg-hitam-judul-body text-base font-semibold rounded-lg disabled:opacity-50 transition-all hover:scale-105 active:scale-95">
-                Previous
+                Sebelumnya
               </button>
 
               <button
                 onClick={handleLoadMore}
                 disabled={visibleCount >= tokenIds.length}
                 className="px-4 py-2 text-back-ground bg-hitam-judul-body text-base font-semibold rounded-lg disabled:opacity-50 transition-all hover:scale-105 active:scale-95">
-                Next
+                Berikutnya
               </button>
             </div>
           ) : null}
@@ -102,7 +102,7 @@ const SouvenirsList: React.FC<SouvenirsListProps> = ({
           {/* Top Section - Content Box */}
           <div className="w-full flex flex-col gap-2 items-center justify-center text-center px-0 sm:px-4">
             <h2 className="text-center text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal text-hitam-judul-body">
-              No data available.
+              Tidak ada data tersedia.
             </h2>
             <h3 className="text-center text-sm font-medium text-icon-wording">
               There is no data available. Please try using the search form or go
@@ -151,7 +151,7 @@ const NFTLister: React.FC<NFTListerProps> = ({ dropContract, tokenId }) => {
   });
 
   // Calculate Price: 0 for 0-22, $4.74 for others
-  const price = tokenIdNumber >= 23 ? "x.xx" : "0.00";
+  const price = tokenIdNumber >= 23 ? "x.xx" : "0,00";
 
   return (
     <div className="w-full grid grid-cols-1 gap-4 p-4 border border-solid border-border-tombol rounded-3xl">
@@ -179,19 +179,19 @@ const NFTLister: React.FC<NFTListerProps> = ({ dropContract, tokenId }) => {
               {nft?.metadata?.name || "Unknown NFT"}
             </h2>
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Price ${price}
+              Harga Rp{price}
             </h2>
           </div>
           <Link href={`/kolektibel/kartu/${tokenId}`}>
             <button className="w-full rounded-lg p-2 text-back-ground bg-hitam-judul-body text-base font-semibold">
               {/* {Number(price) > 0 ? "Coming Soon" : "Collect Now"} */}
-              {Number(price) !== 0 ? "Coming Soon" : "Collect Now"}
+              {Number(price) == 0 ? "Segera Rilis" : "Klaim Sekarang"}
             </button>
           </Link>
         </>
       ) : (
         <h2 className="text-left text-sm font-medium text-icon-wording">
-          No data available.
+          Tidak ada data tersedia.
         </h2>
       )}
     </div>

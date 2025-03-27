@@ -51,15 +51,15 @@ const Kolektibel: React.FC = () => {
 
   // Calculate price (fixed values: 0.00 for 0-22, 4.74 for 23+)
   const calculatePrice = () => {
-    if (isNaN(tokenIdNumber)) return "0.00";
+    if (isNaN(tokenIdNumber)) return "0,00";
 
-    return tokenIdNumber >= 23 ? "x.xx" : "0.00";
+    return tokenIdNumber >= 23 ? "x.xx" : "0,00";
   };
 
   // Ensure tokenId exists, otherwise redirect
   useEffect(() => {
     if (!tokenId) {
-      router.push("/");
+      router.push("/kolektibel");
     }
   }, [tokenId, router]);
 
@@ -106,7 +106,7 @@ const Kolektibel: React.FC = () => {
             />
           ) : (
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              No data available.
+              Tidak ada data tersedia.
             </h2>
           )}
         </div>
@@ -120,14 +120,14 @@ const Kolektibel: React.FC = () => {
 
           <div className="flex flex-row gap-2">
             <h1 className="text-left text-sm font-medium text-icon-wording">
-              by
+              oleh
             </h1>
             <span className="text-3xl leading-6 text-icon-wording">
               &#9673;
             </span>
             <h1 className="text-left text-sm font-medium text-icon-wording">
-              <Link href="https://bukharicreative.group/" target="_blank">
-                Bukhari Creative Group
+              <Link href="https://nft.istiqlal.or.id/" target="_blank">
+                Istiqlal Digital Legacy (IDL)
               </Link>
             </h1>
           </div>
@@ -158,20 +158,20 @@ const Kolektibel: React.FC = () => {
           {/* NFT Info */}
           <div className="w-full grid grid-cols-3">
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Price
+              Harga
             </h2>
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Edition
+              Edisi
             </h2>
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Owned
+              Milik Anda
             </h2>
 
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
-              ${calculatePrice()}
+              Rp{calculatePrice()}
             </h2>
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
-              1899
+              789
             </h2>
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
               {ownedNfts ? ownedNfts.toString() : "0"}
@@ -183,7 +183,7 @@ const Kolektibel: React.FC = () => {
             unstyled
             className={`w-full rounded-lg p-2 text-base font-semibold transition-colors duration-300 ease-in-out
               ${
-                isProcessing || (ownedNfts && Number(ownedNfts) >= 2)
+                isProcessing || (ownedNfts && Number(ownedNfts) >= 1)
                   ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
                   : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body"
               }
@@ -202,7 +202,7 @@ const Kolektibel: React.FC = () => {
             // )}
             disabled={Boolean(
               isProcessing ||
-                (ownedNfts && Number(ownedNfts) >= 2) ||
+                (ownedNfts && Number(ownedNfts) >= 1) ||
                 // Number(calculatePrice()) > 0 // 🔥 Disable if price is greater than 0
                 Number(calculatePrice()) !== 0 // 🔥 Disable if price is greater than 0
             )}
@@ -231,10 +231,10 @@ const Kolektibel: React.FC = () => {
               setPesanTunggu(null);
             }}>
             {/* {Number(calculatePrice()) > 0 ? "Coming Soon" : "Collect Now"} */}
-            {Number(calculatePrice()) !== 0 ? "Coming Soon" : "Collect Now"}
+            {Number(calculatePrice()) == 0 ? "Segera Rilis" : "Klaim Sekarang"}
           </ClaimButton>
           <h4 className="text-left text-xs font-medium text-icon-wording">
-            &#42;Maximum 2 editions per owner.
+            &#42;Maksimal 1 edisi per pemilik.
           </h4>
         </div>
       </div>

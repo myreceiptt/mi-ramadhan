@@ -308,7 +308,8 @@ const Perpustakaan: React.FC = () => {
             </span>
           </ClaimButton>
           <h4 className="text-left text-xs font-medium text-icon-wording">
-            &#42;Maksimal 1 edisi per hari.
+            &#42;Maksimal 1 edisi per hari. Soulbound, tidak dapat
+            dipindahtangankan.
           </h4>
         </div>
       </div>
