@@ -256,7 +256,7 @@ const Perpustakaan: React.FC = () => {
               ${
                 isProcessing || erc1155Claimed
                   ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
-                  : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body"
+                  : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
               }
             `}
             contractAddress={istiqlalDigitalLegacy.address}

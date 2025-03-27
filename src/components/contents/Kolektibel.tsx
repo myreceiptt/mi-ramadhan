@@ -185,7 +185,7 @@ const Kolektibel: React.FC = () => {
               ${
                 isProcessing || (ownedNfts && Number(ownedNfts) >= 1)
                   ? "border-2 border-solid border-border-tombol bg-back-ground text-hitam-judul-body"
-                  : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body"
+                  : "border-2 border-solid border-back-ground text-back-ground bg-hitam-judul-body cursor-pointer"
               }
             `}
             contractAddress={istiqlalDigitalLegacy.address}
