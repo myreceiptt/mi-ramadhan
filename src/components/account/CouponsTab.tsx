@@ -34,7 +34,7 @@ export default function CouponsTab() {
     contract: istiqlalDigitalLegacy,
     address: activeAccount?.address || "",
     start: 0,
-    count: 9,
+    count: 10,
   });
 
   // Fetch owned NFTs 2
