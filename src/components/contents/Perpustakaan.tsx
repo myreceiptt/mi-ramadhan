@@ -142,9 +142,9 @@ const Perpustakaan: React.FC = () => {
 
   // Calculate price (fixed values: 0.00 for 0-22, 4.74 for 23+)
   const calculatePrice = () => {
-    if (isNaN(tokenIdNumber)) return "0.00";
+    if (isNaN(tokenIdNumber)) return "0,00";
 
-    return tokenIdNumber >= 23 ? "x.xx" : "0.00";
+    return tokenIdNumber >= 23 ? "x.xx" : "0,00";
   };
 
   // Ensure tokenId exists
@@ -237,7 +237,7 @@ const Perpustakaan: React.FC = () => {
             </h2>
 
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
-              ${calculatePrice()}
+              Rp{calculatePrice()}
             </h2>
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
               {claimedSupply !== null && maxSupply !== null

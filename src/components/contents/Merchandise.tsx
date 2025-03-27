@@ -142,9 +142,9 @@ const Merchandise: React.FC = () => {
 
   // Calculate price (fixed values: 0.00 for 0-22, 4.74 for 23+)
   const calculatePrice = () => {
-    if (isNaN(tokenIdNumber)) return "0.00";
+    if (isNaN(tokenIdNumber)) return "0,00";
 
-    return tokenIdNumber >= 23 ? "x.xx" : "0.00";
+    return tokenIdNumber >= 23 ? "x.xx" : "150k";
   };
 
   // Ensure tokenId exists
@@ -200,14 +200,14 @@ const Merchandise: React.FC = () => {
 
           <div className="flex flex-row gap-2">
             <h1 className="text-left text-sm font-medium text-icon-wording">
-              by
+              oleh
             </h1>
             <span className="text-3xl leading-6 text-icon-wording">
               &#9673;
             </span>
             <h1 className="text-left text-sm font-medium text-icon-wording">
-              <Link href="https://lab-x.co/" target="_blank">
-                LabX
+              <Link href="https://igf.or.id/" target="_blank">
+                Istiqlal Global Fund
               </Link>
             </h1>
           </div>
@@ -227,17 +227,17 @@ const Merchandise: React.FC = () => {
           {/* NFT Info */}
           <div className="w-full grid grid-cols-3">
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Price
+              Harga
             </h2>
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Edition
+              Edisi
             </h2>
             <h2 className="text-left text-sm font-medium text-icon-wording">
-              Owned
+              Milik Anda
             </h2>
 
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
-              ${calculatePrice()}
+              Rp{calculatePrice()}
             </h2>
             <h2 className="text-left text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-hitam-judul-body">
               {claimedSupply !== null && maxSupply !== null
@@ -296,19 +296,19 @@ const Merchandise: React.FC = () => {
                 <>Available in: {getCountdownString()}</>
               ) : erc1155Claimed ? (
                 canClaimReason?.includes("DropClaimExceedLimit") ? (
-                  "Already Claimed"
+                  "Sudah Diklaim"
                 ) : canClaimReason?.includes("DropClaimExceedMaxSupply") ? (
-                  "Claim Closed"
+                  "Klaim Ditutup"
                 ) : (
-                  "Claim Closed"
+                  "Klaim Ditutup"
                 )
               ) : (
-                "Claim Now"
+                "Klaim Sekarang"
               )}
             </span>
           </ClaimButton>
           <h4 className="text-left text-xs font-medium text-icon-wording">
-            &#42;Maximum 1 edition per owner.
+            &#42;Soulbound, tidak dapat dipindahtangankan.
           </h4>
         </div>
       </div>
