@@ -230,8 +230,11 @@ const Kolektibel: React.FC = () => {
               setIsProcessing(false);
               setPesanTunggu(null);
             }}>
-            {/* {Number(calculatePrice()) > 0 ? "Coming Soon" : "Collect Now"} */}
-            {Number(calculatePrice()) == 0 ? "Segera Rilis" : "Klaim Sekarang"}
+            {ownedNfts && Number(ownedNfts) >= 1
+              ? "Sudah Diklaim"
+              : Number(calculatePrice()) == 0
+              ? "Segera Rilis"
+              : "Klaim Sekarang"}
           </ClaimButton>
           <h4 className="text-left text-xs font-medium text-icon-wording">
             &#42;Maksimal 1 edisi per pemilik.
