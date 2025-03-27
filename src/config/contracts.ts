@@ -42,7 +42,7 @@ export const memoraZer0 = getContract({
 });
 
 // All Non-Fungible Tokens Contracts
-// Poin Istiqlal on Base.
+// Poin IGF on Base.
 export const poinIGF = getContract({
   address: "0x2F2080A9EfcfF05B1175b0D613a61B992544AcE1",
   chain: base,
