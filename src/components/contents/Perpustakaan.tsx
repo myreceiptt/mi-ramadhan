@@ -271,13 +271,13 @@ const Perpustakaan: React.FC = () => {
             disabled={Boolean(isProcessing || erc1155Claimed)}
             onClick={() => {
               setIsProcessing(true);
-              setPesanTunggu("Processing. Be patient and wait.");
+              setPesanTunggu("Diproses. Mohon sabar dan tunggu.");
               setPesanSukses(null);
               setPesanGagal(null);
             }}
             onTransactionSent={() => {
               setPesanTunggu(null);
-              setPesanKirim("Claiming your Virtual Collectible.");
+              setPesanKirim("Mengklaim Kartu Kolektibel.");
             }}
             onError={(error) => {
               setIsProcessing(false);
@@ -288,7 +288,7 @@ const Perpustakaan: React.FC = () => {
             onTransactionConfirmed={async () => {
               setIsProcessing(false);
               setPesanKirim(null);
-              setPesanSukses("Successful! Virtual Collectible claimed.");
+              setPesanSukses("Berhasil! Klaim selesai.");
               setErc1155Claimed(true);
             }}>
             <span>
