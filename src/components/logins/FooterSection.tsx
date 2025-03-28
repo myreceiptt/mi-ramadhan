@@ -16,6 +16,7 @@ import {
 
 // Components libraries
 import Subscribe from "./SubscribeForm";
+import QRCodeButton from "../contents/QRCodeButton";
 
 const Footer: React.FC = () => {
   const [footerClass, setFooterClass] = useState<string>(
@@ -87,6 +88,8 @@ const Footer: React.FC = () => {
               className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-footer-kotak-icon m-1 rounded-lg">
               <FaWhatsapp />
             </Link>
+
+            <QRCodeButton />
           </div>
         </div>
       </div>
