@@ -81,7 +81,7 @@ export default function QRCodeButton() {
       {/* Download Button */}
       <button
         onClick={downloadQRCode}
-        className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-footer-kotak-icon m-1 rounded-lg"
+        className="w-8 h-8 flex items-center justify-center text-xl text-back-ground bg-footer-kotak-icon m-1 rounded-lg cursor-pointer"
         aria-label="Download QR Code">
         <FaQrcode />
       </button>
