@@ -27,7 +27,7 @@ import { base } from "@/config/rantais";
 import Loader from "@/components/contents/ReusableLoader";
 
 const BukaBersama: React.FC = () => {
-  const tokenNumber = "0";
+  const tokenNumber = "10";
   const tokenMedia = "/images/bukabersama.png";
   // Ensure state variables are properly declared
   const [currentTime, setCurrentTime] = useState(new Date());
