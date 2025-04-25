@@ -53,7 +53,7 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <div className="w-full relative hidden md:block overflow-hidden">
         <Image
           src={selectedArt}
-          alt="Sambut Ramadhan di Masjid Istiqlal"
+          alt="Jumat Berkah di Masjid Istiqlal"
           width={1845}
           height={1920}
           className="absolute inset-0 w-full h-full object-cover object-right"
