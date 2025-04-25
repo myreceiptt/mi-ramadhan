@@ -1,16 +1,45 @@
 // /src/app/page.tsx
 
+// "use client";
+
+// // External libraries
+// import React from "react";
+
+// // Components libraries
+// import ClaimAll from "@/components/contents/ClaimAll";
+// import DynamicLoginPage from "@/components/logins/DynamicLogin";
+
+// const PageHome: React.FC = () => (
+//   <DynamicLoginPage ContentComponent={ClaimAll} />
+// );
+
+// export default PageHome;
+
+// /src/app/kolektibel/page.tsx
+
 "use client";
 
 // External libraries
 import React from "react";
 
 // Components libraries
-import ClaimAll from "@/components/contents/ClaimAll";
+import SouvenirsList from "@/components/contents/SouvenirsList";
 import DynamicLoginPage from "@/components/logins/DynamicLogin";
 
-const PageHome: React.FC = () => (
-  <DynamicLoginPage ContentComponent={ClaimAll} />
+const pageTitle1 = "IDL";
+const pageTitle2 = "Collectibles";
+const tokenIds = ["3", "4", "5", "6", "7", "8", "9"];
+
+const KolektibelPage: React.FC = () => (
+  <DynamicLoginPage
+    ContentComponent={() => (
+      <SouvenirsList
+        tokenIds={tokenIds}
+        title1={pageTitle1}
+        title2={pageTitle2}
+      />
+    )}
+  />
 );
 
-export default PageHome;
+export default KolektibelPage;
