@@ -74,11 +74,11 @@ const LoginLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </Link>
         <div id="headers" className="w-full flex flex-col gap-2">
           <h1 className="flex text-left xl:text-4xl lg:text-3xl text-2xl font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
-            Log in Sekarang & Raih Berkah Ramadhan!
+            Log in Sekarang & Raih Berkah Jumatan!
           </h1>
 
           <h2 className="flex text-left xl:text-lg lg:text-base md:text-sm text-xs font-normal text-hitam-judul-body tracking-tighter justify-start align-middle">
-            Sambut Ramadhan dengan kejutan spesial! Nikmati pengalaman seru,
+            Jumat Berkah dengan kejutan spesial! Nikmati pengalaman seru,
             kupon digital, dan hadiah menarik. Jangan sampai ketinggalan!
           </h2>
         </div>
